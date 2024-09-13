@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { hasInitialMagicLinkBeenSent } from '$lib/auth';
+	import { hasInitialMagicLinkBeenSent, sendMagicLink } from '$lib/auth';
 	import Seo from '$lib/components/SEO.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -11,10 +11,12 @@
 	let isSending = $state(false);
 	let isSent = $state(false);
 
-	const handleSendLoginLink = async () => {
+	const handleSendLoginLink = async (data: unknown) => {
 		try {
+			console.log(data);
 			isSending = true;
-			toast('hello');
+			toast.info('Sending magic link');
+			await sendMagicLink('isaackoz130@gmail.com');
 		} catch (err: unknown) {
 			console.log(err);
 		} finally {

@@ -3,11 +3,6 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import Header from '$lib/components/layout/Header.svelte';
 	import Seo from '$lib/components/SEO.svelte';
-	import { onMount } from 'svelte';
-	import { checkAuth } from '$lib/auth';
-	import { auth } from '$stores/global';
-	import { goto } from '$app/navigation';
-	import { Skeleton } from '$lib/components/ui/skeleton';
 	import {
 		Card,
 		CardContent,
@@ -15,23 +10,13 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import { LoaderIcon } from 'lucide-svelte';
 
-	let isLoggedIn = $state<boolean | null>(null);
-	onMount(async () => {
-		await checkAuth();
-		auth.subscribe((val) => {
-			isLoggedIn = val.isLoggedIn;
-			if (!isLoggedIn) {
-				goto('/login/');
-			}
-		});
-	});
+	export let data;
 </script>
 
 <Seo title="Trades" description="View your trades." />
 
-{#if isLoggedIn}
+{#if data.isAuth}
 	<div class="bg-background flex h-screen w-full overflow-hidden">
 		<ScrollArea class="border-muted max-h-screen border-r pr-2" type="hover">
 			<aside class=" hidden min-h-screen flex-col p-4 xl:flex xl:w-[250px]">
@@ -66,7 +51,7 @@
 			</ScrollArea>
 		</div>
 	</div>
-{:else if isLoggedIn === false}
+{:else}
 	<div class="fixed flex h-screen w-screen items-center justify-center">
 		<Card class="w-[300px]">
 			<CardHeader>
@@ -80,9 +65,9 @@
 			</CardHeader>
 		</Card>
 	</div>
-{:else if isLoggedIn === null}
+	<!-- {:else if isLoggedIn === null}
 	<Skeleton class="fixed flex h-screen w-screen flex-col items-center justify-center">
 		<LoaderIcon class="size-8 animate-spin" />
 		<div>Logging you in...</div>
-	</Skeleton>
+	</Skeleton> -->
 {/if}

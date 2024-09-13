@@ -1,12 +1,17 @@
 <script lang="ts">
 	import Breadcrumbs from './Breadcrumbs.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { Button } from '../ui/button';
-	import { BellIcon, XIcon } from 'lucide-svelte';
 	import SearchAnything from './SearchAnything.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import * as Popover from '../ui/popover';
 	import Notifications from './Notifications.svelte';
+	import { signOut } from 'supertokens-web-js/recipe/session';
+	import { goto, invalidateAll } from '$app/navigation';
+
+	const handleLogout = async () => {
+		await signOut();
+		await invalidateAll();
+		goto('/login/');
+	};
 </script>
 
 <header
@@ -33,6 +38,7 @@
 					<DropdownMenu.Item>Billing</DropdownMenu.Item>
 					<DropdownMenu.Item>Team</DropdownMenu.Item>
 					<DropdownMenu.Item>Subscription</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={handleLogout}>Signout</DropdownMenu.Item>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>

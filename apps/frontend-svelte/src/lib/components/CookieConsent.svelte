@@ -2,13 +2,9 @@
 	import { cookieStore } from '$stores/global';
 	import { fromStore } from 'svelte/store';
 	import { Button } from './ui/button';
-	import { Card, CardHeader, CardTitle } from './ui/card';
+	import { Card } from './ui/card';
 
 	const val2 = fromStore(cookieStore('consent', null));
-
-	$effect(() => {
-		console.log(val2.current);
-	});
 </script>
 
 {#if val2.current === ''}

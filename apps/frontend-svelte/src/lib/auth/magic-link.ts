@@ -44,22 +44,57 @@ export async function isThisSameBrowserAndDevice() {
 	return (await getLoginAttemptInfo()) !== undefined;
 }
 
-export async function handleMagicLinkClicked() {
+type THandleMagicLinkClicked =
+	| {
+			success: true;
+	  }
+	| { success: false; reason: string };
+export async function handleMagicLinkClicked(): Promise<THandleMagicLinkClicked> {
 	try {
 		const response = await consumeCode();
+		console.log(response);
 		if (response.status === 'OK') {
 			await clearLoginAttemptInfo();
 			if (response.createdNewRecipeUser && response.user.loginMethods.length === 1) {
-				// user sign up success
+				// If the user is new and signing up
+				return {
+					success: true
+				};
 			} else {
-				// user sign in success
+				return {
+					success: true
+				};
 			}
 		} else {
 			await clearLoginAttemptInfo();
-			window.alert('Login failed. Please try again');
-			window.location.assign('/login');
+			let status: string = 'Unknown error. Try again.';
+			switch (response.status) {
+				case 'SIGN_IN_UP_NOT_ALLOWED': {
+					status = 'Sign up is not allowed at this time.';
+					break;
+				}
+				case 'EXPIRED_USER_INPUT_CODE_ERROR': {
+					status = 'The link you clicked has expired. Try again.';
+					break;
+				}
+				case 'INCORRECT_USER_INPUT_CODE_ERROR': {
+					status = 'The link you clicked was invalid. Try again.';
+					break;
+				}
+				case 'RESTART_FLOW_ERROR': {
+					status = 'This link has already been used. Try again.';
+				}
+			}
+			return {
+				success: false,
+				reason: status
+			};
 		}
 	} catch (err: unknown) {
 		console.log(err);
+		return {
+			success: false,
+			reason: 'Server error. Try again later.'
+		};
 	}
 }
