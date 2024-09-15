@@ -23,4 +23,16 @@ export class UserDao extends BaseDao {
 
     return !!user;
   }
+
+  async checkUsernameAvailable(username: string): Promise<boolean> {
+    const user = await this.db
+      .select({})
+      .from(users)
+      .where(eq(users.username, username));
+    if (user.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

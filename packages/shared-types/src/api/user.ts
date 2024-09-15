@@ -6,3 +6,7 @@ export type TAPIUserMeGet = {
   onBoardingComplete: boolean;
   email: string;
 };
+
+export type TAPIUserCheckUsernamePOST = {
+  isAvailable: boolean;
+};

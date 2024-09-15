@@ -45,7 +45,7 @@
 		<div class="flex w-full flex-col">
 			<Header />
 			<ScrollArea class="max-h-screen">
-				<main class="min-h-[calc(100vh-3.5rem)] p-2 xl:p-4">
+				<main class="min-h-[calc(100vh-3.5rem)] px-2 xl:px-4">
 					<slot></slot>
 				</main>
 			</ScrollArea>

@@ -3,14 +3,17 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@app/auth/auth.guard';
 import { Session } from '@app/auth/session/session.decorator';
 import { SessionContainer } from 'supertokens-node/recipe/session';
-import { TAPIUserMeGet } from '@repo/shared-types';
+import { TAPIUserCheckUsernamePOST, TAPIUserMeGet } from '@repo/shared-types';
 import UserRoles from 'supertokens-node/recipe/userroles';
+import { ParseStringPipe } from '@core/common/validation/parse-string.pipe';
 
 @Controller('user')
 export class UserController {
@@ -37,5 +40,13 @@ export class UserController {
       );
     }
     return this.userService.getMe(session.getUserId());
+  }
+
+  @UseGuards(new AuthGuard())
+  @Post('check-username')
+  async checkUsername(
+    @Query('username', new ParseStringPipe(3)) username: string,
+  ): Promise<TAPIUserCheckUsernamePOST> {
+    return this.userService.checkUsername(username);
   }
 }
