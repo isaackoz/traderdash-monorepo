@@ -1,0 +1,6 @@
+{
+  "name": "@repo/db",
+  "imports": {
+    "#*": "./src/*"
+  }
+}

@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { ConfigModule } from '@nestjs/config';
+import databaseConfig from '@core/common/config/database.config';
+import { validate } from '@core/common/validation/env.validation';
 
 @Module({
   imports: [
@@ -18,6 +22,12 @@ import { AuthModule } from './auth/auth.module';
         websiteBasePath: '/login',
       },
     }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [databaseConfig],
+      validate: validate,
+    }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

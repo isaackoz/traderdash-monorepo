@@ -16,12 +16,14 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
+		"@repo/shared-types": "workspace:*",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.4",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
 		"@tailwindcss/typography": "^0.5.14",
 		"@types/eslint": "^9.6.0",
+		"@types/nprogress": "^0.2.3",
 		"autoprefixer": "^10.4.20",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -41,16 +43,19 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource-variable/work-sans": "^5.0.20",
+		"@tanstack/svelte-query": "^5.56.2",
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
 		"cmdk-sv": "^0.0.18",
 		"echarts": "^5.5.1",
 		"lucide-svelte": "^0.439.0",
 		"mode-watcher": "^0.4.1",
+		"nprogress": "^0.2.0",
 		"supertokens-web-js": "^0.13.0",
 		"svelte-sonner": "^0.3.27",
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1",
-		"vaul-svelte": "^0.3.2"
+		"vaul-svelte": "^0.3.2",
+		"zod": "^3.23.8"
 	}
 }

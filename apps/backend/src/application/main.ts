@@ -14,6 +14,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalFilters(new SupertokensExceptionFilter());
+  app.enableShutdownHooks();
   await app.listen(PORT);
 }
 bootstrap();

@@ -1,4 +1,1 @@
-export type HelloWorld = {
-  hello: string;
-  world: string;
-};
+export * from "./api";

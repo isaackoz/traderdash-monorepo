@@ -1,7 +1,6 @@
 import { browser } from '$app/environment';
 import { getCookie, setCookie } from '$lib/utils';
 import { writable, type Writable } from 'svelte/store';
-import type { User } from '../../types/auth';
 
 export const cookieStore = (
 	key: string,
@@ -33,15 +32,3 @@ export const cookieStore = (
 
 	return { ...readableStore, set, update };
 };
-
-export const superTokensActive = writable<boolean>(false);
-
-export type AuthStore =
-	| {
-			user: null;
-	  }
-	| {
-			user: User;
-	  }
-	| null;
-export const authStore = writable<AuthStore>(null);

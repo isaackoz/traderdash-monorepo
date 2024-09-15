@@ -6,10 +6,20 @@ import {
 	resendCode
 } from 'supertokens-web-js/recipe/passwordless';
 
-export async function sendMagicLink(email: string) {
+export async function sendMagicLink(
+	email: string,
+	options: {
+		isSignUp: boolean;
+	} = {
+		isSignUp: false
+	}
+) {
 	try {
 		const response = await createCode({
-			email
+			email,
+			userContext: {
+				isSignUp: options.isSignUp
+			}
 		});
 		if (response.status === 'SIGN_IN_UP_NOT_ALLOWED') {
 			window.alert(response.reason);
