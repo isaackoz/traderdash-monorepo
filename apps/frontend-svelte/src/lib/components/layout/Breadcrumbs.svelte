@@ -5,7 +5,18 @@
 	const breadcrumbs: Array<{
 		label: string;
 		href: string;
+		isActive?: boolean;
 	}> = $derived.by(() => {
+		if (($page?.data?.labels ?? []).length > 0) {
+			return $page.data.labels!.map((label, index) => {
+				return {
+					label: label.title,
+					href: label.href,
+					isActive: label.active
+				};
+			});
+		}
+
 		const tokens = $page.url.pathname
 			.split('/')
 			.filter((t) => t !== '')
@@ -31,7 +42,7 @@
 			{#if $page.data.showBreadcrumb}
 				<Breadcrumb.Separator />
 				<Breadcrumb.Item>
-					<Breadcrumb.Link href={crumb.href} class={cn(false && 'font-bold')}>
+					<Breadcrumb.Link href={crumb.href} class={cn(crumb.isActive && 'font-bold')}>
 						{crumb.label}
 					</Breadcrumb.Link>
 				</Breadcrumb.Item>

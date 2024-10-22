@@ -10,3 +10,13 @@ export type TAPIUserMeGet = {
 export type TAPIUserCheckUsernamePOST = {
   isAvailable: boolean;
 };
+
+export type TAPICompleteOnboardingPOST =
+  | {
+      success: true;
+      message?: null;
+    }
+  | {
+      success: false;
+      message: string;
+    };

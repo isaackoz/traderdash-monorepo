@@ -35,4 +35,31 @@ export class UserDao extends BaseDao {
       return false;
     }
   }
+
+  async completeOnboarding(id: string, username: string): Promise<void> {
+    await this.db
+      .update(users)
+      .set({
+        username: username,
+        onBoardingComplete: true,
+      })
+      .where(eq(users.id, id));
+  }
+  async isOnboardedComplete(id: string): Promise<boolean> {
+    const res = (
+      await this.db
+        .select({ complete: users.onBoardingComplete })
+        .from(users)
+        .where(eq(users.id, id))
+    )[0];
+    if (!res) {
+      throw new Error('User not found');
+    }
+
+    if (res.complete) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

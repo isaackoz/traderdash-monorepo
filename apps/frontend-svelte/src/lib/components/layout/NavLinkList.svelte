@@ -7,9 +7,12 @@
 		LandmarkIcon,
 		Link,
 		NotebookTextIcon,
-		Skull
+		Skull,
+		UnplugIcon
 	} from 'lucide-svelte';
 	import NavLink from './NavLink.svelte';
+	import Calendar from 'lucide-svelte/icons/calendar';
+	import Bell from 'lucide-svelte/icons/bell';
 	const navLinks: TNavLinkList = [
 		{
 			parent: {
@@ -21,7 +24,7 @@
 		{
 			parent: {
 				href: '/trades/',
-				label: 'My Trades',
+				label: 'Trades',
 				icon: NotebookTextIcon
 			}
 		},
@@ -31,6 +34,29 @@
 				label: 'Portfolio',
 				icon: LandmarkIcon
 			}
+		},
+		{
+			parent: {
+				href: '/alerts',
+				label: 'Alerts',
+				icon: Bell
+			}
+		},
+		{
+			parent: {
+				label: 'Connections',
+				icon: UnplugIcon
+			},
+			children: [
+				{
+					href: '/connections/',
+					label: 'Manage'
+				},
+				{
+					href: '/connections/add',
+					label: 'Add new'
+				}
+			]
 		},
 		{
 			parent: {
@@ -47,6 +73,13 @@
 					label: 'Top Performers'
 				}
 			]
+		},
+		{
+			parent: {
+				label: 'Calendar',
+				icon: Calendar,
+				href: '/calendar'
+			}
 		}
 	];
 </script>

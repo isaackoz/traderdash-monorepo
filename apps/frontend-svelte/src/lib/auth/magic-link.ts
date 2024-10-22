@@ -22,9 +22,10 @@ export async function sendMagicLink(
 			}
 		});
 		if (response.status === 'SIGN_IN_UP_NOT_ALLOWED') {
-			window.alert(response.reason);
+			console.log(response.reason);
+			return false;
 		} else {
-			window.alert('Check your email');
+			return true;
 		}
 	} catch (err: unknown) {
 		console.log(err);

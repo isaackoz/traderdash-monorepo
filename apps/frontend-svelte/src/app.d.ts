@@ -6,7 +6,11 @@ declare global {
 		// interface Locals {}
 		interface PageData {
 			showBreadcrumb?: boolean;
-			label?: string;
+			labels?: {
+				href: string;
+				title: string;
+				active?: boolean;
+			}[];
 		}
 		// interface PageState {}
 		// interface Platform {}

@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
@@ -11,7 +12,11 @@ import { UserService } from './user.service';
 import { AuthGuard } from '@app/auth/auth.guard';
 import { Session } from '@app/auth/session/session.decorator';
 import { SessionContainer } from 'supertokens-node/recipe/session';
-import { TAPIUserCheckUsernamePOST, TAPIUserMeGet } from '@repo/shared-types';
+import {
+  TAPICompleteOnboardingPOST,
+  TAPIUserCheckUsernamePOST,
+  TAPIUserMeGet,
+} from '@repo/shared-types';
 import UserRoles from 'supertokens-node/recipe/userroles';
 import { ParseStringPipe } from '@core/common/validation/parse-string.pipe';
 
@@ -48,5 +53,13 @@ export class UserController {
     @Query('username', new ParseStringPipe(3)) username: string,
   ): Promise<TAPIUserCheckUsernamePOST> {
     return this.userService.checkUsername(username);
+  }
+  @UseGuards(new AuthGuard())
+  @Post('complete-onboarding')
+  async completeOnboarding(
+    @Body('username', new ParseStringPipe(3)) username: string,
+    @Session() session: SessionContainer,
+  ): Promise<TAPICompleteOnboardingPOST> {
+    return this.userService.completeOnboarding(session.getUserId(), username);
   }
 }

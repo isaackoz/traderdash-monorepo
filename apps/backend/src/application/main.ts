@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   console.log(`Starting server on port ${PORT}`);
   app.enableCors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'http://localhost:4173'],
     allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
     credentials: true,
   });
@@ -17,4 +17,4 @@ async function bootstrap() {
   app.enableShutdownHooks();
   await app.listen(PORT);
 }
-bootstrap();
+void bootstrap();
