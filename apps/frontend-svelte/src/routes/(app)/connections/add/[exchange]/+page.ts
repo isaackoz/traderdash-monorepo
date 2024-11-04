@@ -1,6 +1,10 @@
+import { exchangeComponents, type ExchangeName } from '$lib/exchanges';
 import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params, parent }) => {
 	const { user } = await parent();
+
+	const exchangeId =
+		params.exchange in exchangeComponents ? (params.exchange as ExchangeName) : undefined;
 
 	return {
 		user,
@@ -15,6 +19,7 @@ export const load: PageLoad = async ({ params, parent }) => {
 				title: `${params.exchange}`,
 				href: `/connections/add/${params.exchange}`
 			}
-		]
+		],
+		exchangeId: exchangeId
 	};
 };
