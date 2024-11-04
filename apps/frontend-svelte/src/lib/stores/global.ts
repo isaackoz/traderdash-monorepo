@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { getCookie, setCookie } from '$lib/utils';
+import { getCookie, setCookie } from '$lib/utils/cookie';
 import { writable, type Writable } from 'svelte/store';
 
 export const cookieStore = (
