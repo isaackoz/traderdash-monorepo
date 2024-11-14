@@ -18,8 +18,8 @@ import * as EntitiesSchema from '../entities/entities.schema';
           });
           await pool.query('SELECT 1');
           return drizzle(pool, { schema: EntitiesSchema });
-        } catch {
-          console.log('DB Connection error');
+        } catch (e) {
+          console.log('DB Connection error: ', e);
           throw new HttpException(
             'Database service down',
             HttpStatus.SERVICE_UNAVAILABLE,

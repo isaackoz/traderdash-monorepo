@@ -1,10 +1,12 @@
-import { exchangeComponents, type ExchangeName } from '$lib/exchanges';
 import type { PageLoad } from './$types';
+import { exchanges, type Exchanges } from '@repo/exchange-info';
 export const load: PageLoad = async ({ params, parent }) => {
 	const { user } = await parent();
 
-	const exchangeId =
-		params.exchange in exchangeComponents ? (params.exchange as ExchangeName) : undefined;
+	const exchangeId = (exchanges as ReadonlyArray<string>).includes(params.exchange)
+		? (params.exchange as Exchanges)
+		: undefined;
+	console.log('EID IS', exchangeId);
 
 	return {
 		user,

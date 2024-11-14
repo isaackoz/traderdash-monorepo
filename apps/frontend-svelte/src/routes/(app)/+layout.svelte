@@ -10,11 +10,31 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
+	import { serverStatusStore } from '$lib/stores/global.js';
+	import { fade } from 'svelte/transition';
 
 	export let data;
+
+	const serverStatus = serverStatusStore();
 </script>
 
 <Seo title="Trades" description="View your trades." />
+
+{#if $serverStatus === 'dead'}
+	<div
+		class="bg-muted text-foreground fixed bottom-12 right-1/2 z-[999] translate-x-1/2 rounded-xl border-2 border-red-900 p-2 shadow-sm shadow-orange-900"
+		in:fade
+		out:fade
+	>
+		<p class="">Unable to reach API server</p>
+		<a
+			href="https://traderdash.instatus.com/"
+			target="_blank"
+			referrerpolicy="no-referrer"
+			class="text-sm text-blue-400 underline">Check for status updates &rarr;</a
+		>
+	</div>
+{/if}
 
 {#if data.isAuth}
 	<div class="bg-background flex h-screen w-full overflow-hidden">

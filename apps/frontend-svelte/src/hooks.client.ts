@@ -4,7 +4,7 @@ import Passwordless from 'supertokens-web-js/recipe/passwordless';
 
 SuperTokens.init({
 	appInfo: {
-		apiDomain: 'http://localhost:3000',
+		apiDomain: 'http://localhost.test:3000',
 		apiBasePath: '/auth',
 		appName: 'TraderDash'
 	},

@@ -1,11 +1,12 @@
 <script lang="ts">
+	import CloudflareImage from '../image/cloudflare-image.svelte';
 	import { Card, CardContent } from '../ui/card';
 
 	let {
 		id,
 		description,
 		displayName,
-		imgUrl,
+		imgId,
 		imgBgColor,
 		href
 	}: {
@@ -13,7 +14,7 @@
 		displayName: string;
 		description: string;
 		href: string;
-		imgUrl?: string;
+		imgId?: string;
 		imgBgColor?: string;
 	} = $props();
 </script>
@@ -22,24 +23,18 @@
 	<Card
 		class="bg-muted hover:bg-muted/90 drop-shadow-xl  transition-all ease-out hover:cursor-pointer active:scale-[0.99]"
 	>
-		<CardContent class="mt-4">
-			<div class="flex items-center space-x-2">
-				<div class=" h-10 w-10 rounded-lg bg-stone-500">
-					{#if imgUrl}
-						<img
-							src={imgUrl}
-							alt={`${displayName} Logo`}
-							width="32"
-							height="32"
-							class="object-contain"
-						/>
+		<CardContent class="">
+			<div class="flex items-center space-x-4">
+				<div class="h-10 w-10 rounded-lg">
+					{#if imgId}
+						<CloudflareImage {imgId} variant="32" className="object-contain h-full w-full" />
 					{/if}
 				</div>
-				<h3 class="text-lg font-bold">
+				<h3 class="text-xl font-bold">
 					{displayName}
 				</h3>
 			</div>
-			<div class="mt-4 h-10">
+			<div class="mt-4">
 				<p class="text-primary/90 line-clamp-2 text-sm">{description}</p>
 			</div>
 		</CardContent>

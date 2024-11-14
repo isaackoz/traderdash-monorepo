@@ -4,7 +4,6 @@
 	import { Button } from '../ui/button';
 	import { Input } from '../ui/input';
 	import { Label } from '../ui/label';
-	import type { InputConstraint } from 'sveltekit-superforms';
 	import debounce from '$lib/utils/debounce';
 	import { checkUsernameSchema } from '$lib/schemas/user';
 	import type { ZodError } from 'zod';

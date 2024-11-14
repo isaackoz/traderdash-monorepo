@@ -10,13 +10,13 @@ import { validate } from '@core/common/validation/env.validation';
 @Module({
   imports: [
     AuthModule.forRoot({
-      connectionURI: 'http://localhost:3567',
+      connectionURI: 'http://localhost.test:3567',
       apiKey: 'abcdefghijklmnopqrstuvwxyz',
       appInfo: {
         // Learn more about this on https://supertokens.com/docs/passwordless/appinfo
         appName: 'TraderDash',
-        apiDomain: 'http://localhost:3000',
-        websiteDomain: 'http://localhost:5173',
+        apiDomain: 'http://localhost.test:3000',
+        websiteDomain: 'http://localhost.test:5173',
         apiBasePath: '/auth',
         websiteBasePath: '/login',
       },

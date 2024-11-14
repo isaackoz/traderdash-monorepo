@@ -16,8 +16,7 @@
 			<CardTitle>404</CardTitle>
 			<CardDescription>This page could not be found</CardDescription>
 		</CardHeader>
-		<CardFooter class="flex w-full flex-col space-y-2">
-			<Button class="w-full" variant="outline" href="/">Index</Button>
+		<CardFooter class="mt-4 flex w-full flex-col space-y-2">
 			<Button class="w-full" autofocus href="/home/">Dashboard Home</Button>
 		</CardFooter>
 	</Card>
