@@ -39,61 +39,67 @@
 	);
 	const { validateForm, enhance, form: formData } = form;
 
-	let isVerifying = $state(false);
-	function verifyApiKeys() {
-		toast.promise(
-			async () => {
-				try {
-					isVerifying = true;
-					if (exchangeId !== 'traderdash') {
-						const exchangeClass = ccxt[exchangeId];
-						const exchange = new exchangeClass({
-							apiKey: $formData.apiKey,
-							secret: $formData.secret,
-							uid: $formData.uid,
-							passwoord: $formData.password
-						});
-
-						// Check if we have required fields
-						const res = exchange.checkRequiredCredentials(false);
-						if (!res) {
-							throw new Error('Missing required credentials');
-						}
-
-						// Some exchanges require signin. Do so here
-						// We don't do anything on error because most exchanges dont require a signin
-						try {
-							await exchange.signIn();
-						} catch {}
-
-						// Check
-						try {
-							const r = await exchange.fetchBalance();
-							console.log(r);
-						} catch (e) {
-							console.log(e);
-							throw new Error('Invalid keys');
-						}
-
-						// Check if we can
-					} else {
-						throw new Error('Can not check traderdash');
+	async function verifyCredentials() {
+		try {
+			isVerifying = true;
+			if (exchangeId !== 'traderdash') {
+				const exchangeClass = ccxt[exchangeId];
+				const exchange = new exchangeClass({
+					apiKey: $formData.apiKey,
+					secret: $formData.secret?.replace(/\\n/g, '\n').trim(),
+					uid: $formData.uid,
+					passwoord: $formData.password,
+					proxy: 'http://localhost2.test:8080/',
+					origin: 'localhost.test',
+					options: {
+						maxRetriesOnFailure: 1
 					}
-				} finally {
-					isVerifying = false;
+				});
+
+				// Check if we have required fields
+				const res = exchange.checkRequiredCredentials(false);
+				if (!res) {
+					throw new Error('Missing required credentials');
 				}
-			},
-			{
-				success: (data) => {
-					return 'Keys are safu';
-				},
-				loading: 'Checking...',
-				error: (e) => {
+
+				// Some exchanges require signin. Do so here
+				try {
+					if (exchange.has['signIn']) {
+						await exchange.signIn();
+					}
+				} catch {}
+
+				// Check
+				try {
+					const r = await exchange.fetchBalance();
+					console.log(r);
+				} catch (e) {
 					console.log(e);
-					return `Error verifying: ${e instanceof Error ? e.message : 'An unknown error occured'}`;
+					throw new Error('Invalid keys');
 				}
+
+				// Check if we can
+			} else {
+				throw new Error('Can not check traderdash');
 			}
-		);
+		} finally {
+			isVerifying = false;
+		}
+	}
+
+	let isVerifying = $state(false);
+
+	function handleVerifyApiKeys() {
+		toast.promise(verifyCredentials, {
+			success: () => {
+				return `Successfully connected to ${exchangeInfo.displayName}`;
+			},
+			loading: 'Checking API Keys...',
+			error: (e) => {
+				console.log(e);
+				return `Error verifying: ${e instanceof Error ? e.message : 'An unknown error occured'}`;
+			}
+		});
 	}
 
 	// validateForm({ update: true });
@@ -146,7 +152,7 @@
 							{/snippet}
 						</FormControl>
 						<FormDescription>
-							Your {exchangeInfo.displayName} API key
+							{exchangeInfo.authentication.apiKeyDescription}
 						</FormDescription>
 						<FormFieldErrors />
 					</FormField>
@@ -165,8 +171,7 @@
 							{/snippet}
 						</FormControl>
 						<FormDescription>
-							Your {exchangeInfo.displayName} API key Password. This is <b>not</b> your account password.
-							This is the password for your API key.
+							{exchangeInfo.authentication.passwordDescription}
 						</FormDescription>
 						<FormFieldErrors />
 					</FormField>
@@ -185,7 +190,7 @@
 							{/snippet}
 						</FormControl>
 						<FormDescription>
-							Your {exchangeInfo.displayName} API key secret.
+							{exchangeInfo.authentication.secretDescription}
 						</FormDescription>
 						<FormFieldErrors />
 					</FormField>
@@ -203,13 +208,14 @@
 								/>
 							{/snippet}
 						</FormControl>
-						<FormDescription>User ID associated with this API key</FormDescription>
+						<FormDescription>{exchangeInfo.authentication.uidDescription}</FormDescription>
 						<FormFieldErrors />
 					</FormField>
 				{/if}
 				<Collapsible>
 					<div class="flex w-full justify-end">
 						<CollapsibleTrigger
+							disabled
 							class={buttonVariants({
 								variant: 'link',
 								size: 'sm',
@@ -252,10 +258,13 @@
 						disabled={isVerifying}
 						class="text-blue-500 hover:text-blue-500"
 						type="button"
-						onclick={verifyApiKeys}>Verify API Keys</Button
+						onclick={handleVerifyApiKeys}>Verify API Keys</Button
 					>
 				</div>
 			</div>
 		</div>
 	{/if}
+	<div class="col-span-2 flex w-full justify-end">
+		<Button type="submit">Add Exchange</Button>
+	</div>
 </form>

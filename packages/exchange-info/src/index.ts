@@ -67,7 +67,7 @@ export const exchangeConfigs: ExchangeConfigs = {
     imageId: "d48a58c0-5807-4daa-ce95-544e2144f500",
     description: "Binance is a cryptocurrency exchange.",
     authentication: {
-      enabled: true,
+      enabled: false,
       requireApiKey: true,
       requirePassword: false,
       requireSecret: true,
@@ -86,9 +86,13 @@ export const exchangeConfigs: ExchangeConfigs = {
     authentication: {
       enabled: true,
       requireApiKey: true,
-      requirePassword: true,
+      apiKeyDescription:
+        "Your Coinbase API key. Should look like organizations/.../apiKeys/...",
+      requirePassword: false,
       requireSecret: true,
-      requireUid: true,
+      secretDescription:
+        "Your Coinbase Private Key. Should start with -----BEGIN and end with \\n",
+      requireUid: false,
     },
     settings: {
       external: true,
@@ -101,7 +105,7 @@ export const exchangeConfigs: ExchangeConfigs = {
     imageId: "d48a58c0-5807-4daa-ce95-544e2144f500",
     description: "Kraken is a cryptocurrency exchange.",
     authentication: {
-      enabled: true,
+      enabled: false,
       requireApiKey: true,
       requirePassword: true,
       requireSecret: true,

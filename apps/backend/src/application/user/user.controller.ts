@@ -27,7 +27,7 @@ export class UserController {
   @UseGuards(new AuthGuard())
   @Get('me')
   async getMe(@Session() session: SessionContainer): Promise<TAPIUserMeGet> {
-    return this.userService.getMe(session.getUserId());
+    return await this.userService.getMe(session.getUserId());
   }
 
   @UseGuards(new AuthGuard())

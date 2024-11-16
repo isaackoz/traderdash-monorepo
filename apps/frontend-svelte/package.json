@@ -16,6 +16,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.48.2",
+		"@repo/shared-schemas": "workspace:*",
 		"@repo/shared-types": "workspace:*",
 		"@sveltejs/adapter-auto": "^3.3.1",
 		"@sveltejs/adapter-static": "^3.0.6",
@@ -35,6 +36,7 @@
 		"globals": "^15.11.0",
 		"lucide-svelte": "^0.439.0",
 		"mode-watcher": "^0.4.1",
+		"node-stdlib-browser": "^1.2.1",
 		"prettier": "^3.3.3",
 		"prettier-plugin-svelte": "^3.2.7",
 		"prettier-plugin-tailwindcss": "^0.6.8",
@@ -51,13 +53,14 @@
 		"typescript-eslint": "^8.12.2",
 		"vaul-svelte": "1.0.0-next.1",
 		"vite": "^5.4.10",
+		"vite-plugin-node-polyfills": "^0.17.0",
 		"vitest": "^2.1.4",
-		"zod": "^3.23.8",
-		"@repo/shared-schemas": "workspace:*"
+		"zod": "^3.23.8"
 	},
 	"type": "module",
 	"dependencies": {
 		"@fontsource-variable/work-sans": "^5.1.0",
+		"@repo/exchange-info": "workspace:*",
 		"@tanstack/svelte-query": "^5.59.17",
 		"ccxt": "^4.4.30",
 		"cmdk-sv": "^0.0.18",
@@ -65,7 +68,6 @@
 		"nprogress": "^0.2.0",
 		"supertokens-web-js": "^0.13.1",
 		"svelte-headless-table": "^0.18.3",
-		"throttle-debounce": "^5.0.2",
-		"@repo/exchange-info": "workspace:*"
+		"throttle-debounce": "^5.0.2"
 	}
 }

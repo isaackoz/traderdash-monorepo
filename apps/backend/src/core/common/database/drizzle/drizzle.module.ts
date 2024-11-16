@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PG_CONNECTION } from './pg-connection';
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import * as EntitiesSchema from '../entities/entities.schema';
+import * as EntitiesSchema from '@repo/db';
 
 @Module({
   imports: [ConfigModule],

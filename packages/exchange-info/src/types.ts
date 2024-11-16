@@ -28,17 +28,33 @@ export type ExchangeConfig = {
      */
     requireApiKey: boolean;
     /**
+     * Input description for API key
+     */
+    apiKeyDescription?: string;
+    /**
      * Whether this exchange requires a secret
      */
     requireSecret: boolean;
+    /**
+     * Input description for secret
+     */
+    secretDescription?: string;
     /**
      * Whether this exchange requires a uid, or user id
      */
     requireUid: boolean;
     /**
+     * Input description for uid
+     */
+    uidDescription?: string;
+    /**
      * Whether this exchange requires a password
      */
     requirePassword: boolean;
+    /**
+     * Input description for password
+     */
+    passwordDescription?: string;
   };
 
   settings: {

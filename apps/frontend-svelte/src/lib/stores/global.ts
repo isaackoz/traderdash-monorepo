@@ -69,17 +69,19 @@ type ExchangeInfo = {
  * This store will hold all the user's exchange connections sensitive data (mainly API keys)
  *
  */
-export const exConnectionsStore = (
+export const exchangeConnectionsStore = (
 	key: string,
 	initial: Set<ExchangeInfo> | null
-): Writable<Set<ExchangeInfo>> | null => {
+): Writable<Set<ExchangeInfo> | null> => {
 	let currVal = initial;
-	const { set: setStore, ...readableStore } = writable<Set<ExchangeInfo> | null>(initial, () => {
-		const set = (val: Set<ExchangeInfo> | null) => {
-			currVal = val;
-			setStore(val);
-		};
+	const { set: setStore, ...readableStore } = writable<Set<ExchangeInfo> | null>(initial);
+	const set = (val: Set<ExchangeInfo> | null) => {
+		currVal = val;
+		setStore(val);
+	};
 
-		const update = (id: string, data: ExchangeInfo) => {};
-	});
+	const update = (fn: (v: Set<ExchangeInfo> | null) => Set<ExchangeInfo> | null) => {
+		set(fn(currVal));
+	};
+	return { ...readableStore, set, update };
 };

@@ -1,3 +1,5 @@
+import type { ExchangeConnectionSelect } from "@repo/db";
+
 export type TAPIUserMeGet = {
   id: string;
   username: string | null;
@@ -5,6 +7,7 @@ export type TAPIUserMeGet = {
   updatedAt: Date;
   onBoardingComplete: boolean;
   email: string;
+  exchangeData: TAPIUserExchangeData[];
 };
 
 export type TAPIUserCheckUsernamePOST = {
@@ -20,3 +23,5 @@ export type TAPICompleteOnboardingPOST =
       success: false;
       message: string;
     };
+
+export type TAPIUserExchangeData = ExchangeConnectionSelect;
