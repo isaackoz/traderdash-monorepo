@@ -10,7 +10,10 @@ export function pieChart(node: HTMLElement, data: AggregatedExchange[]) {
 			},
 			legend: {
 				top: 0,
-				left: 'center'
+				left: 'center',
+				textStyle: {
+					color: '#fff'
+				}
 			},
 			series: [
 				{

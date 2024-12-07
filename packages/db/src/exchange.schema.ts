@@ -1,4 +1,11 @@
-import { boolean, integer, jsonb, pgTable, text } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { WithModificationDates } from "./util/with-modifitaction-dates";
 import { usersTable } from "./user.schema";
 import { exchanges } from "@repo/exchange-info";
@@ -36,3 +43,19 @@ export type ExchangeConnectionSelect =
   typeof userExchangeConnectionsTable.$inferSelect;
 export type ExchangeConnectionInsert =
   typeof userExchangeConnectionsTable.$inferInsert;
+
+export const tradesTable = pgTable("trades", {
+  id: uuid("id").primaryKey(),
+  userExchangeId: integer("user_exchange_id")
+    .notNull()
+    .references(() => userExchangeConnectionsTable.id),
+
+  tickerBase: text("ticker_base").notNull(),
+  tickerQuote: text("ticker_base").notNull(),
+
+  type: text("type", { enum: ["SPOT", "FUTURE", "OPTION"] }).notNull(),
+  direction: text("direction", { enum: ["LONG", "SHORT"] }),
+});
+
+export type TradeSelect = typeof tradesTable.$inferSelect;
+export type TradeInsert = typeof tradesTable.$inferInsert;

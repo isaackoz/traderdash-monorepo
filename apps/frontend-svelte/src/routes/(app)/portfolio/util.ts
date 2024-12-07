@@ -1,11 +1,17 @@
-import type { PortfolioItem, AggregatedExchange, PortfolioTreemapNode } from '$lib/types/portfolio';
+import type {
+	PortfolioItem,
+	AggregatedExchange,
+	PortfolioTreemapNode,
+	PortfolioTotal
+} from '$lib/types/portfolio';
+import type { Exchanges } from '@repo/exchange-info';
 
 /**
  * Groups PortfolioItems by exchangeId.
  * @param items - Array of PortfolioItems
  * @returns A map where the key is the exchangeId and the value is an array of PortfolioItems.
  */
-function groupByExchange(items: PortfolioItem[]): Record<string, PortfolioItem[]> {
+function groupByExchange(items: PortfolioItem[]): Record<Exchanges, PortfolioItem[]> {
 	return items.reduce<Record<string, PortfolioItem[]>>((acc, item) => {
 		if (!acc[item.exchangeId]) {
 			acc[item.exchangeId] = [];
@@ -78,4 +84,23 @@ export function buildTreemapData(items: PortfolioItem[]): PortfolioTreemapNode[]
 			children
 		};
 	});
+}
+
+export function calculatePortfolioTotal(items: PortfolioItem[]): PortfolioTotal {
+	const grouped = groupByExchange(items);
+
+	// get the total for each exchange individually
+	const totalByExchange = Object.entries(grouped)
+		.map(([exchangeId, items]): PortfolioTotal['totalByExchange'][0] => {
+			const total = items.reduce((sum, item): number => {
+				return sum + calculateWorth(item.balance, item.price, item.type);
+			}, 0);
+
+			return { exchangeId: exchangeId as Exchanges, total };
+		})
+		.sort((a, b) => b.total - a.total);
+
+	const total = totalByExchange.reduce((sum, { total }) => sum + total, 0);
+
+	return { total, totalByExchange };
 }

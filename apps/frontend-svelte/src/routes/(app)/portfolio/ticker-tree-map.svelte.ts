@@ -6,7 +6,10 @@ export function tickerTreeMap(node: HTMLElement, data: PortfolioTreemapNode[]) {
 		const options: EChartsOption = {
 			title: {
 				text: 'Ticker Distribution',
-				left: 'center'
+				left: 'center',
+				textStyle: {
+					color: '#fff'
+				}
 			},
 			series: [
 				{

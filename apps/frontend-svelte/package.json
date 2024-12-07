@@ -55,7 +55,8 @@
 		"vite": "^5.4.11",
 		"vite-plugin-node-polyfills": "^0.17.0",
 		"vitest": "^2.1.8",
-		"zod": "^3.23.8"
+		"zod": "^3.23.8",
+		"@repo/db": "workspace:*"
 	},
 	"type": "module",
 	"dependencies": {

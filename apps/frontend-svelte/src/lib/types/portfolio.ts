@@ -19,3 +19,17 @@ export interface PortfolioTreemapNode {
 	value?: number; // Only leaf nodes (tickers) have a value
 	children?: PortfolioTreemapNode[]; // Parent nodes (exchanges) have children
 }
+
+export type PortfolioTotal = {
+	/**
+	 * Total for all exchanges combined
+	 */
+	total: number;
+	/**
+	 * Total by exchange (in order)
+	 */
+	totalByExchange: Array<{
+		exchangeId: Exchanges;
+		total: number;
+	}>;
+};
