@@ -37,13 +37,6 @@
 		},
 		{
 			parent: {
-				href: '/alerts',
-				label: 'Alerts',
-				icon: Bell
-			}
-		},
-		{
-			parent: {
 				label: 'Connections',
 				icon: UnplugIcon
 			},
@@ -57,29 +50,6 @@
 					label: 'Add new'
 				}
 			]
-		},
-		{
-			parent: {
-				label: 'Crypto',
-				icon: BitcoinIcon
-			},
-			children: [
-				{
-					href: '/crypto/list',
-					label: 'Crypto List'
-				},
-				{
-					href: '/crypto/list',
-					label: 'Top Performers'
-				}
-			]
-		},
-		{
-			parent: {
-				label: 'Calendar',
-				icon: Calendar,
-				href: '/calendar'
-			}
 		}
 	];
 </script>

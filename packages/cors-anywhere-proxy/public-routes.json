@@ -1,0 +1,10 @@
+{
+  "https://api.coinbase.com/v2/currencies": {
+    "exchange": "coinbase",
+    "ttl": 1000
+  },
+  "https://api.coinbase.com/v2/currencies/crypto": {
+    "exchange": "coinbase",
+    "ttl": 1000
+  }
+}

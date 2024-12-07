@@ -1,0 +1,5 @@
+{
+  "coinbase": {
+    "maxReqPerSec": 10
+  }
+}

@@ -1,6 +1,7 @@
-import { integer, jsonb, pgTable, text } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, text } from "drizzle-orm/pg-core";
 import { WithModificationDates } from "./util/with-modifitaction-dates";
 import { usersTable } from "./user.schema";
+import { exchanges } from "@repo/exchange-info";
 
 export const userExchangeConnectionsTable = pgTable(
   "user_exchange_connection",
@@ -9,7 +10,7 @@ export const userExchangeConnectionsTable = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => usersTable.id),
-    exchangeId: text("exchange_id").notNull(),
+    exchangeId: text("exchange_id", { enum: exchanges }).notNull(),
 
     // User specific customizations
     nickname: text("nickname").notNull(),
@@ -18,6 +19,8 @@ export const userExchangeConnectionsTable = pgTable(
     // user preferences during development.
     // TODO: Attach a type to this
     preferences: jsonb("preferences"),
+    proxyUrl: text("proxy_url"),
+    noProxy: boolean("no_proxy").default(false),
 
     // For auth. Note that all exchanges have different authentication methods, so leave these as nullable
     apiKeyHashed: text("api_key_h"),

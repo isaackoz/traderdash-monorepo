@@ -10,6 +10,7 @@ const envConfigSchema = z.object({
   // Name of the schema to use
   DB_SCHEMA_NAME: z.coerce.string().min(1),
   DB_URL: z.coerce.string().min(1),
+  ENCRYPTION_KEY: z.string().min(1),
 });
 
 export function validate(config: Record<string, unknown>) {

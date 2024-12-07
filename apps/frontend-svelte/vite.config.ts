@@ -5,11 +5,13 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 export default defineConfig({
 	plugins: [
 		nodePolyfills({
-			include: ['buffer']
+			include: ['buffer'],
+			protocolImports: true
 		}),
 		sveltekit()
 	],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+	},
+	optimizeDeps: { include: ['http-proxy-agent', 'https-proxy-agent', 'socks-proxy-agent'] }
 });

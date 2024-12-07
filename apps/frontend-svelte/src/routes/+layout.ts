@@ -11,7 +11,6 @@ export const ssr = false;
 export const load: LayoutLoad = async ({ fetch }) => {
 	// Check auth status
 	let user: TAPIUserMeGet | null = null;
-	console.log(user);
 	let isAuth = false;
 	if (browser) {
 		isAuth = await doesSessionExist();

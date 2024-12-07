@@ -10,6 +10,8 @@ export const addUserExchangeSchema = z
     uid: z.string().optional(),
     password: z.string().optional(),
     selfEncrypted: z.boolean().optional(),
+    proxyUrl: z.union([z.literal(""), z.string().url()]).optional(),
+    noProxy: z.boolean().optional(),
   })
   .superRefine((val, ctx) => {
     // Verify that the exchange has the required auth values

@@ -70,6 +70,10 @@ export type ExchangeConfig = {
      * Whether or not this exchange supports rest api
      */
     restEnabled: boolean;
+    /**
+     * Proxy location for default proxy
+     */
+    proxyLocation: "USA" | "NETHERLANDS";
   };
 };
 

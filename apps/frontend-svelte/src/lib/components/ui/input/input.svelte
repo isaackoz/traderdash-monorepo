@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { WithElementRef } from 'bits-ui';
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.js';
+	import { Button } from '../button';
 	import { EyeIcon } from 'lucide-svelte';
 
 	let {
@@ -10,22 +11,21 @@
 		class: className,
 		isPassword,
 		...restProps
-	}: WithElementRef<HTMLInputAttributes> & {
-		isPassword?: boolean;
-	} = $props();
+	}: WithElementRef<HTMLInputAttributes> & { isPassword?: boolean } = $props();
 
-	let hidePassword = $state(true);
+	let isHidden = $state(true);
 </script>
 
 {#if isPassword}
 	<div class="relative">
-		<button
-			class="bg-background absolute right-2 top-1/2 -translate-y-1/2"
-			type="button"
-			onclick={() => (hidePassword = !hidePassword)}
+		<Button
+			onclick={() => (isHidden = !isHidden)}
+			variant="ghost"
+			size="icon"
+			class="absolute right-2 top-1/2 -translate-y-1/2"
 		>
-			<EyeIcon size={18} />
-		</button>
+			<EyeIcon />
+		</Button>
 		<input
 			bind:this={ref}
 			class={cn(
@@ -34,7 +34,7 @@
 			)}
 			bind:value
 			{...restProps}
-			type={hidePassword ? 'password' : 'text'}
+			type={isHidden ? 'password' : 'text'}
 		/>
 	</div>
 {:else}

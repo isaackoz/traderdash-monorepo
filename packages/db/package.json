@@ -14,6 +14,7 @@
   "types": "./src/index.ts",
   "devDependencies": {
     "@types/node": "^22.9.0",
+    "@repo/exchange-info": "workspace:*",
     "drizzle-kit": "^0.24.2",
     "glob": "^11.0.0",
     "rimraf": "^6.0.1",

@@ -17,6 +17,7 @@
     "skipLibCheck": true,
     "strict": true,
     "traceResolution": false,
+    "strictNullChecks": true,
     "incremental": false,
     "outDir": "dist",
     "target": "ES2021",

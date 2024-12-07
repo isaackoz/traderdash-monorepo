@@ -1,8 +1,4 @@
 <script lang="ts">
-	import ConnectionCard from '$lib/components/connections/ConnectionCard.svelte';
-	import ManageConnectionsTable from '$lib/components/connections/table/manage-connections-table.svelte';
-	import PageHeader from '$lib/components/layout/common/PageHeader.svelte';
-	import PageWrapper from '$lib/components/layout/common/PageWrapper.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 </script>
 
@@ -16,7 +12,5 @@
 			<Button href="/connections/add">+ New Connection</Button>
 		</div>
 	</div>
-	<div class=" py-10">
-		<ManageConnectionsTable />
-	</div>
+	<div class=" py-10"></div>
 </div>

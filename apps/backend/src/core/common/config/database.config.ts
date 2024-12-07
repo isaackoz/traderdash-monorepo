@@ -9,5 +9,6 @@ export default registerAs('database', () => {
     DB_NAME: process.env.DB_NAME,
     DB_SCHEMA_NAME: process.env.DB_SCHEMA,
     DB_URL: process.env.DB_URL,
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
   };
 });

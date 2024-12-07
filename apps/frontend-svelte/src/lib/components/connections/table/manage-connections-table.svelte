@@ -2,19 +2,11 @@
 	import { createTable, Render, Subscribe } from 'svelte-headless-table';
 	import { readable } from 'svelte/store';
 	import * as Table from '$lib/components/ui/table';
+	import { getConnectionState } from '$lib/context/connection-context.svelte';
 
-	type Connection = {
-		id: string;
-		name: string;
-		exchange: 'Coinbase' | 'Binance' | 'TraderDash';
-		type: 'crypto';
-		createdAt: Date;
-		status: 'active' | 'error';
-	};
+	const test = getConnectionState();
 
-	const data: Connection[] = [];
-
-	const table = createTable(readable(data));
+	const table = createTable(readable(test.connections));
 
 	const columns = table.createColumns([
 		table.column({
@@ -22,26 +14,17 @@
 			header: 'ID'
 		}),
 		table.column({
-			accessor: 'name',
+			accessor: 'nickname',
 			header: 'Name'
 		}),
 		table.column({
-			accessor: 'exchange',
+			accessor: 'exchangeId',
 			header: 'Exchange'
-		}),
-		table.column({
-			accessor: 'type',
-			header: 'Type'
-		}),
-		table.column({
-			accessor: 'status',
-			header: 'Status',
-			cell: ({ value }) => (value === 'active' ? 'Active' : 'Error')
 		}),
 		table.column({
 			accessor: 'createdAt',
 			header: 'Created At',
-			cell: ({ value }) => value.toDateString()
+			cell: ({ value }) => new Date(value).toLocaleDateString()
 		})
 	]);
 

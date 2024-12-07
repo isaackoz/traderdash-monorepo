@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { exchangeConfigs, type Exchanges } from '@repo/exchange-info';
-	import { defaults, superForm } from 'sveltekit-superforms';
+	import { defaults, setError, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { addUserExchangeSchema } from '@repo/shared-schemas';
 	import ccxt, { exchanges } from 'ccxt';
@@ -21,18 +21,53 @@
 	} from '$lib/components/ui/collapsible';
 	import { ChevronDown } from 'lucide-svelte';
 	import { Switch } from '$lib/components/ui/switch';
+	import { addExchangeConnection } from '$lib/api/user/exchange/add-exchange';
+	import { goto } from '$app/navigation';
 
 	let { exchangeId }: { exchangeId: Exchanges } = $props();
 	const exchangeInfo = exchangeConfigs[exchangeId];
+	let isVerifying = $state(false);
+	let isAdding = $state(false);
 
 	const form = superForm(
-		defaults({ exchangeId: exchangeId, selfEncrypted: false }, zod(addUserExchangeSchema)),
+		defaults(
+			{ exchangeId: exchangeId, selfEncrypted: false, noProxy: false },
+			zod(addUserExchangeSchema)
+		),
 		{
 			SPA: true,
+			resetForm: false,
 			validators: zod(addUserExchangeSchema),
-			onUpdate({ form }) {
+			async onUpdate({ form }) {
 				if (form.valid) {
-					console.log(form.data);
+					try {
+						isAdding = true;
+
+						try {
+							// Verify API keys. This will throw if they're wrong
+							await verifyCredentials();
+						} catch {
+							toast.error('Could not verify credentials. Are your API keys correct?');
+							setError(
+								form,
+								'apiKey',
+								'Invalid API Key. Double check all fields are correctly inputted.'
+							);
+							return;
+						}
+
+						// Attempt to add to account
+						const { error } = await addExchangeConnection(form.data);
+						if (error) {
+							toast.error(error.message);
+							return;
+						}
+
+						toast.success('Successfully added exchange');
+						goto('/connections');
+					} finally {
+						isAdding = false;
+					}
 				}
 			}
 		}
@@ -48,7 +83,7 @@
 					apiKey: $formData.apiKey,
 					secret: $formData.secret?.replace(/\\n/g, '\n').trim(),
 					uid: $formData.uid,
-					passwoord: $formData.password,
+					password: $formData.password,
 					proxy: 'http://localhost2.test:8080/',
 					origin: 'localhost.test',
 					options: {
@@ -87,8 +122,6 @@
 		}
 	}
 
-	let isVerifying = $state(false);
-
 	function handleVerifyApiKeys() {
 		toast.promise(verifyCredentials, {
 			success: () => {
@@ -101,8 +134,6 @@
 			}
 		});
 	}
-
-	// validateForm({ update: true });
 </script>
 
 <div>
@@ -215,7 +246,6 @@
 				<Collapsible>
 					<div class="flex w-full justify-end">
 						<CollapsibleTrigger
-							disabled
 							class={buttonVariants({
 								variant: 'link',
 								size: 'sm',
@@ -227,8 +257,8 @@
 						</CollapsibleTrigger>
 					</div>
 					<CollapsibleContent>
-						<div>
-							<FormField
+						<div class="bg-muted flex flex-col rounded-lg p-4">
+							<!-- <FormField
 								class="border-muted bg-background mt-2 flex flex-row items-center justify-between space-x-2 rounded-lg border p-4"
 								{form}
 								name="selfEncrypted"
@@ -247,6 +277,42 @@
 										<Switch {...props} bind:checked={$formData.selfEncrypted} />
 									{/snippet}
 								</FormControl>
+							</FormField> -->
+							<FormField
+								class="border-muted bg-background mt-2 flex flex-row items-center justify-between space-x-2 rounded-lg border p-4"
+								{form}
+								name="noProxy"
+							>
+								<FormControl>
+									{#snippet children({ props })}
+										<div class="space-y-0.5">
+											<FormLabel>Don't use TraderDash proxy</FormLabel>
+											<FormDescription>
+												If enabled, you must disable CORS.
+												<a class="text-blue-500 underline" href="/help/cors" target="_blank"
+													>learn more &nearr;</a
+												>
+											</FormDescription>
+										</div>
+										<Switch {...props} bind:checked={$formData.noProxy} />
+									{/snippet}
+								</FormControl>
+							</FormField>
+							<FormField {form} name="proxyUrl">
+								<FormControl>
+									{#snippet children({ props })}
+										<FormLabel>Custom Proxy URL</FormLabel>
+										<Input {...props} bind:value={$formData.proxyUrl} />
+									{/snippet}
+								</FormControl>
+								<FormDescription
+									>Leave blank to use TraderDash's internal proxy. To use your own, <a
+										class="text-blue-500 underline"
+										target="_blank"
+										href="help/proxy">read here &rarr;</a
+									></FormDescription
+								>
+								<FormFieldErrors />
 							</FormField>
 						</div>
 					</CollapsibleContent>
@@ -265,6 +331,6 @@
 		</div>
 	{/if}
 	<div class="col-span-2 flex w-full justify-end">
-		<Button type="submit">Add Exchange</Button>
+		<Button type="submit" disabled={isVerifying || isAdding}>Add Exchange</Button>
 	</div>
 </form>

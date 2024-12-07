@@ -16,13 +16,10 @@ export type { ExchangeConfigs, ExchangeConfig, Exchanges };
  * Technically every exchange should be compatible, but we need the intermediary config below to
  * determine what kind of authentication is required for each exchange and other settings.
  */
-export const exchanges = [
-  "traderdash",
-  "coinbase",
-  "bybit",
-  "binance",
-  "kraken",
-] as const;
+export const exchanges = ["traderdash", "coinbase", "bybit", "kraken"] as const;
+export const proxyLocations = {
+  USA: "https://",
+};
 
 /**
  * Exchange Configs
@@ -43,6 +40,7 @@ export const exchangeConfigs: ExchangeConfigs = {
       external: false,
       restEnabled: false,
       wsEnabled: false,
+      proxyLocation: "USA",
     },
   },
   bybit: {
@@ -60,23 +58,7 @@ export const exchangeConfigs: ExchangeConfigs = {
       external: true,
       restEnabled: true,
       wsEnabled: true,
-    },
-  },
-  binance: {
-    displayName: "Binance",
-    imageId: "d48a58c0-5807-4daa-ce95-544e2144f500",
-    description: "Binance is a cryptocurrency exchange.",
-    authentication: {
-      enabled: false,
-      requireApiKey: true,
-      requirePassword: false,
-      requireSecret: true,
-      requireUid: false,
-    },
-    settings: {
-      external: true,
-      restEnabled: true,
-      wsEnabled: true,
+      proxyLocation: "NETHERLANDS",
     },
   },
   coinbase: {
@@ -98,6 +80,7 @@ export const exchangeConfigs: ExchangeConfigs = {
       external: true,
       restEnabled: true,
       wsEnabled: true,
+      proxyLocation: "USA",
     },
   },
   kraken: {
@@ -105,16 +88,17 @@ export const exchangeConfigs: ExchangeConfigs = {
     imageId: "d48a58c0-5807-4daa-ce95-544e2144f500",
     description: "Kraken is a cryptocurrency exchange.",
     authentication: {
-      enabled: false,
+      enabled: true,
       requireApiKey: true,
-      requirePassword: true,
+      requirePassword: false,
       requireSecret: true,
-      requireUid: true,
+      requireUid: false,
     },
     settings: {
       external: true,
       restEnabled: true,
       wsEnabled: true,
+      proxyLocation: "USA",
     },
   },
 };
