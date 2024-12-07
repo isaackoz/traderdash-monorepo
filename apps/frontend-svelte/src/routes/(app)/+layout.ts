@@ -6,6 +6,7 @@ import { browser } from '$app/environment';
 import type { TAPIUserExchangeGet } from '@repo/shared-types';
 import { connectionsState } from '$stores/connections.svelte';
 import ccxt from 'ccxt';
+import { exchangeConfigs, proxyLocations } from '@repo/exchange-info';
 
 export const load: LayoutLoad = async ({ parent, url }) => {
 	const { user, isAuth } = await parent();
@@ -46,9 +47,10 @@ export const load: LayoutLoad = async ({ parent, url }) => {
 		if (connection.exchangeId === 'traderdash') {
 			return;
 		}
+
 		// Create a CCXT class for each connection
 		const exchangeConnection = new ccxt.pro[connection.exchangeId]({
-			proxy: 'http://localhost2.test:8080/',
+			proxy: getProxyUrl(connection),
 			apiKey: connection.apiKey,
 			secret: connection.secret?.replace(/\\n/g, '\n').trim(),
 			uid: connection.uid,
@@ -63,3 +65,21 @@ export const load: LayoutLoad = async ({ parent, url }) => {
 
 	return { user, queryClient };
 };
+
+function getProxyUrl(connection: TAPIUserExchangeGet): string | null {
+	if (connection.noProxy) {
+		return null;
+	}
+	if (connection.proxyUrl && connection.proxyUrl !== '') {
+		return connection.proxyUrl;
+	}
+	// else use the defaults
+	const exchangeInfo = exchangeConfigs[connection.exchangeId];
+	if (exchangeInfo.settings.proxyLocation === 'USA') {
+		return proxyLocations.USA;
+	} else if (exchangeInfo.settings.proxyLocation === 'NETHERLANDS') {
+		return proxyLocations.NETHERLANDS;
+	}
+
+	return null;
+}

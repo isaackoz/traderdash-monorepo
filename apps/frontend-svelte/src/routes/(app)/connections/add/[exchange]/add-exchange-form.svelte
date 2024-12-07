@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { exchangeConfigs, type Exchanges } from '@repo/exchange-info';
+	import { exchangeConfigs, proxyLocations, type Exchanges } from '@repo/exchange-info';
 	import { defaults, setError, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { addUserExchangeSchema } from '@repo/shared-schemas';
@@ -78,13 +78,26 @@
 		try {
 			isVerifying = true;
 			if (exchangeId !== 'traderdash') {
+				const exchangeInfo = exchangeConfigs[exchangeId];
+				let proxyUrl: null | string = null;
+				if ($formData.noProxy) {
+					proxyUrl = null;
+				} else if ($formData.proxyUrl && $formData.proxyUrl !== '') {
+					proxyUrl = $formData.proxyUrl;
+				} else {
+					// default to traderdash proxies
+					proxyUrl = proxyLocations[exchangeInfo.settings.proxyLocation];
+				}
+				console.log('Proxy url is', proxyUrl);
+
 				const exchangeClass = ccxt[exchangeId];
 				const exchange = new exchangeClass({
 					apiKey: $formData.apiKey,
 					secret: $formData.secret?.replace(/\\n/g, '\n').trim(),
 					uid: $formData.uid,
 					password: $formData.password,
-					proxy: 'http://localhost2.test:8080/',
+					proxy: proxyUrl,
+					verbose: true,
 					origin: 'localhost.test',
 					options: {
 						maxRetriesOnFailure: 1
@@ -100,6 +113,7 @@
 				// Some exchanges require signin. Do so here
 				try {
 					if (exchange.has['signIn']) {
+						console.log('Attempting to sign in...');
 						await exchange.signIn();
 					}
 				} catch {}

@@ -18,7 +18,8 @@ export type { ExchangeConfigs, ExchangeConfig, Exchanges };
  */
 export const exchanges = ["traderdash", "coinbase", "bybit", "kraken"] as const;
 export const proxyLocations = {
-  USA: "https://",
+  USA: "https://usa.proxy.traderdash.app/",
+  NETHERLANDS: "https://europe.proxy.traderdash.app/",
 };
 
 /**

@@ -89,6 +89,8 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "Invalid target URL", http.StatusBadRequest)
 		return
 	}
+	// Add original request query params to the targetURL
+	targetURL.RawQuery = req.URL.RawQuery
 
 	// Validate the hostname
 	hostname := targetURL.Hostname()
