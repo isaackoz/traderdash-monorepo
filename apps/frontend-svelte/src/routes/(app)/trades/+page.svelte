@@ -24,7 +24,7 @@
 	<div class="mx-auto mt-12 max-w-7xl">
 		<div class="flex w-full items-center justify-between">
 			<h1 class="text-4xl">Trades</h1>
-			<div>
+			<div class="">
 				<AddTrade />
 			</div>
 		</div>

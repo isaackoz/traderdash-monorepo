@@ -65,3 +65,10 @@ export const addUserExchangeSchema = z
   });
 
 export type AddUserExchangeData = z.infer<typeof addUserExchangeSchema>;
+
+export const addTradeSchema = z.object({
+  exchangeConnectionId: z.coerce.number(),
+  marketSymbol: z.string(),
+});
+
+export type AddTradeData = z.infer<typeof addTradeSchema>;
