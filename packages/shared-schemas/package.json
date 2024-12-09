@@ -20,6 +20,7 @@
   },
   "peerDependencies": {
     "zod": "^3.23.8",
-    "@repo/exchange-info": "workspace:*"
+    "@repo/exchange-info": "workspace:*",
+    "@repo/db": "workspace:*"
   }
 }

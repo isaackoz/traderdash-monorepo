@@ -8,4 +8,5 @@ export type TradesItem = Omit<TradeSelect, 'userExchangeId'> & {
 export type AddTradeMeta = {
 	trackType: 'automatic' | 'manual' | null;
 	liveMarket: boolean | null;
+	syncTrade: boolean;
 };

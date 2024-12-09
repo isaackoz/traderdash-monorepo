@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { exchanges, exchangeConfigs } from "@repo/exchange-info";
-
+import { matches } from "./utility";
+import {
+  insertTradeItemSchema,
+  insertTradeSchema,
+  TradeInsert,
+} from "@repo/db";
 export const addUserExchangeSchema = z
   .object({
     exchangeId: z.enum(exchanges),
@@ -66,6 +71,7 @@ export const addUserExchangeSchema = z
 
 export type AddUserExchangeData = z.infer<typeof addUserExchangeSchema>;
 
+// todo: move this to frontend only since we don't use this on the backend
 export const addTradeSchema = z
   .object({
     exchangeConnectionId: z.coerce.number(),
@@ -73,6 +79,9 @@ export const addTradeSchema = z
     side: z.enum(["buy", "sell"]),
     initialAmount: z.coerce.number(),
     entryPrice: z.number(),
+    /**
+     * Unix time in ms
+     */
     fromTimestamp: z.coerce.number(),
     toTimestamp: z.coerce.number(),
     fromTradeId: z.string(),
@@ -100,3 +109,10 @@ export const addTradeSchema = z
   });
 
 export type AddTradeData = z.infer<typeof addTradeSchema>;
+
+export const addTradeToDbSchema = z.object({
+  tradeData: insertTradeSchema,
+  tradeItems: z.array(insertTradeItemSchema),
+});
+
+export type AddTradeToDbData = z.infer<typeof addTradeToDbSchema>;

@@ -4,6 +4,7 @@
 
 import type { CCXTConnections } from '$lib/types/constants';
 import type { TAPIUserExchangeGet } from '@repo/shared-types';
+import { SvelteMap } from 'svelte/reactivity';
 
 type Connection = {
 	data: TAPIUserExchangeGet;
@@ -12,8 +13,8 @@ type Connection = {
 
 export const connectionsState = $state<{
 	isLoaded: boolean;
-	connections: Map<number, Connection>;
+	connections: SvelteMap<number, Connection>;
 }>({
 	isLoaded: false,
-	connections: new Map()
+	connections: new SvelteMap()
 });

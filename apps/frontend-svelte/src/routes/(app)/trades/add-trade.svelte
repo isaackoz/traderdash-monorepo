@@ -40,7 +40,8 @@
 
 	let formMeta = $state<AddTradeMeta>({
 		liveMarket: null,
-		trackType: null
+		trackType: null,
+		syncTrade: true
 	});
 
 	const form = superForm(defaults(zod(addTradeSchema)), {
@@ -64,7 +65,8 @@
 			step = 1;
 			formMeta = {
 				liveMarket: null,
-				trackType: null
+				trackType: null,
+				syncTrade: true
 			};
 			form.reset();
 		}

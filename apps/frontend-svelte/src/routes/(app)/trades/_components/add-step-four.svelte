@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import DateTime from '$lib/components/ui/date-time/date-time.svelte';
 	import {
 		FormControl,
 		FormDescription,
@@ -16,6 +15,7 @@
 	import type { AddTradeData } from '@repo/shared-schemas';
 	import { CircleHelp } from 'lucide-svelte';
 	import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
+	import { DateInput } from 'date-picker-svelte';
 
 	let {
 		nextStep,
@@ -33,6 +33,21 @@
 	let isMounted = $state(false);
 	let error = $state<null | string>(null);
 	let isLoading = $state(false);
+
+	let fromTime = $state<Date | null>(
+		$formData.fromTimestamp ? new Date($formData.fromTimestamp) : null
+	);
+	let toTime = $state<Date | null>($formData.toTimestamp ? new Date($formData.toTimestamp) : null);
+
+	// Handle from time picker changing
+	$effect(() => {
+		// Convert Date instance to milliseconds
+		$formData.fromTimestamp = fromTime ? fromTime.getTime() : Date.now();
+	});
+
+	$effect(() => {
+		$formData.toTimestamp = toTime ? toTime.getTime() : Date.now();
+	});
 </script>
 
 <div class="flex h-full w-full flex-col overflow-y-hidden">
@@ -175,11 +190,64 @@
 								</PopoverContent>
 							</Popover>
 						</div>
-						<DateTime bind:value={$formData.fromTimestamp} />
+						<DateInput
+							bind:value={fromTime}
+							timePrecision="second"
+							placeholder=""
+							disabled={isLoading || addTradeMeta.trackType === 'automatic'}
+							dynamicPositioning
+						/>
 					{/snippet}
 				</FormControl>
 			</FormField>
+			{#if addTradeMeta.liveMarket && addTradeMeta.trackType === 'automatic'}
+				<FormField {form} name="toTimestamp">
+					<FormControl>
+						{#snippet children({ props })}
+							<div class="flex items-center space-x-2">
+								<FormLabel>To Date/Time</FormLabel>
+								<Popover>
+									<PopoverTrigger class="text-sm text-blue-500"
+										><CircleHelp class="size-5" /></PopoverTrigger
+									>
+									<PopoverContent class="text-sm">
+										This is the date/time to end tracking the trade from. <br />
+										{#if addTradeMeta.syncTrade}
+											You can not change this as you opted to automatically sync your trades up to
+											date.
+										{:else}
+											Choose a date to end tracking trades from
+										{/if}
+									</PopoverContent>
+								</Popover>
+							</div>
+							{#if addTradeMeta.syncTrade}
+								<Input disabled readonly value="Sync up to date" />
+							{:else}
+								<DateInput
+									bind:value={toTime}
+									timePrecision="second"
+									placeholder=""
+									disabled={isLoading || addTradeMeta.syncTrade}
+									dynamicPositioning
+								/>
+							{/if}
+						{/snippet}
+					</FormControl>
+				</FormField>
+			{/if}
 		</span>
 		<Button class="w-full" type="submit">Finish</Button>
 	</div>
 </div>
+
+<style>
+	:global(body) {
+		--date-picker-foreground: #f7f7f7;
+		--date-picker-background: #16171c;
+		--date-picker-highlight-border: hsl(var(--deg), 98%, 49%);
+		--date-picker-highlight-shadow: hsla(var(--deg), 98%, 49%, 50%);
+		--date-picker-selected-color: hsl(var(--deg), 100%, 85%);
+		--date-picker-selected-background: hsla(var(--deg), 98%, 49%, 20%);
+	}
+</style>

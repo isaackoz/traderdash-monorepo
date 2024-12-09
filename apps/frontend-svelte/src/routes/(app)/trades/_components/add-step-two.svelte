@@ -52,6 +52,9 @@
 		addTradeMeta.liveMarket = false;
 		addTradeMeta.trackType = 'manual';
 		$formData.marketSymbol = '';
+		addTradeMeta.syncTrade = false;
+		$formData.fromTimestamp = 0;
+		$formData.toTimestamp = 0;
 		nextStep(4);
 	}
 
