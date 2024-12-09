@@ -54,14 +54,22 @@ export const load: LayoutLoad = async ({ parent, url }) => {
 			apiKey: connection.apiKey,
 			secret: connection.secret?.replace(/\\n/g, '\n').trim(),
 			uid: connection.uid,
-			password: connection.password
+			password: connection.password,
+			options: getExchangeOptions(connection)
 		});
+		try {
+			console.log(await exchangeConnection.loadTimeDifference());
+		} catch (e) {
+			console.log('error', e);
+		}
 
-		connectionsState.set(connection.id, {
+		connectionsState.connections.set(connection.id, {
 			data: connection,
 			ccxtExchanges: exchangeConnection
 		});
 	});
+	console.log('Loading done');
+	connectionsState.isLoaded = true;
 
 	return { user, queryClient };
 };
@@ -82,4 +90,10 @@ function getProxyUrl(connection: TAPIUserExchangeGet): string | null {
 	}
 
 	return null;
+}
+
+function getExchangeOptions(connection: TAPIUserExchangeGet) {
+	const exchangeInfo = exchangeConfigs[connection.exchangeId];
+	console.log('setting exchange options', exchangeInfo.options);
+	return exchangeInfo?.options ?? {};
 }

@@ -16,19 +16,36 @@
 	import { addTradeSchema } from '@repo/shared-schemas';
 	import AddStepTwo from './_components/add-step-two.svelte';
 	import AddStepThree from './_components/add-step-three.svelte';
+	import AddStepFour from './_components/add-step-four.svelte';
+	import type { AddTradeMeta } from '$lib/types/trades';
 
 	let step = $state<number>(3);
+	let open = $state(false);
 
-	function nextStep() {
-		step += 1;
+	function nextStep(i?: number) {
+		if (i) {
+			step = i;
+		} else {
+			step += 1;
+		}
 	}
 
-	function prevStep() {
-		step -= 1;
+	function prevStep(i?: number) {
+		if (i) {
+			step = i;
+		} else {
+			step -= 1;
+		}
 	}
 
-	const { form, errors, enhance } = superForm(defaults(zod(addTradeSchema)), {
+	let formMeta = $state<AddTradeMeta>({
+		liveMarket: null,
+		trackType: null
+	});
+
+	const form = superForm(defaults(zod(addTradeSchema)), {
 		SPA: true,
+		resetForm: false,
 		validators: zod(addTradeSchema),
 		onUpdate({ form }) {
 			if (form.valid) {
@@ -38,7 +55,23 @@
 	});
 </script>
 
-<Sheet open={true}>
+<Sheet
+	{open}
+	controlledOpen={true}
+	onOpenChange={(v) => {
+		if (v === false) {
+			// Reset the state
+			step = 1;
+			formMeta = {
+				liveMarket: null,
+				trackType: null
+			};
+			form.reset();
+		}
+
+		open = v;
+	}}
+>
 	<SheetTrigger>
 		{#snippet child({ props })}
 			<Button {...props}>Add Trade</Button>
@@ -49,7 +82,7 @@
 			<SheetTitle>Add Trade</SheetTitle>
 			<SheetDescription>Add and track a new trade</SheetDescription>
 		</SheetHeader>
-		<form method="POST" use:enhance class="flex flex-grow flex-col">
+		<form method="POST" use:form.enhance class="flex flex-grow flex-col">
 			<div class="">
 				<Progress value={(step - 1) * (100 / 3)} class="" />
 				<div class="mt-1 flex w-full justify-between">
@@ -67,9 +100,10 @@
 						class={cn(
 							'text-xl',
 							step === 1 && 'text-muted-foreground',
-							step === 2 && 'font-extrabold text-orange-600'
+							step === 2 && 'font-extrabold text-orange-600',
+							step > 2 && 'underline underline-offset-4'
 						)}
-						disabled={step !== 3}
+						disabled={step < 3}
 						onclick={() => {
 							step = 2;
 						}}
@@ -80,9 +114,14 @@
 						class={cn(
 							'text-xl',
 							step < 3 && 'text-muted-foreground',
-							step === 3 && 'font-extrabold text-orange-600'
+							step === 3 && 'font-extrabold text-orange-600',
+							step > 3 && 'underline underline-offset-4',
+							!formMeta.liveMarket && 'text-muted-foreground no-underline'
 						)}
-						disabled
+						disabled={step < 4 || !formMeta.liveMarket}
+						onclick={() => {
+							step = 3;
+						}}
 					>
 						3
 					</button>
@@ -100,11 +139,13 @@
 			</div>
 			<div class="mt-4 flex h-full flex-col">
 				{#if step === 1}
-					<AddStepOne {nextStep} formData={form} />
+					<AddStepOne {nextStep} {form} bind:addTradeMeta={formMeta} />
 				{:else if step === 2}
-					<AddStepTwo formData={form} {nextStep} {prevStep} />
+					<AddStepTwo {form} {nextStep} {prevStep} bind:addTradeMeta={formMeta} />
 				{:else if step === 3}
-					<AddStepThree formData={form} {nextStep} {prevStep} />
+					<AddStepThree {form} {nextStep} {prevStep} bind:addTradeMeta={formMeta} />
+				{:else if step === 4}
+					<AddStepFour {form} {nextStep} {prevStep} bind:addTradeMeta={formMeta} />
 				{/if}
 			</div>
 		</form>

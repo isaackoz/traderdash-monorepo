@@ -10,4 +10,10 @@ type Connection = {
 	ccxtExchanges: CCXTConnections;
 };
 
-export const connectionsState = $state<Map<number, Connection>>(new Map());
+export const connectionsState = $state<{
+	isLoaded: boolean;
+	connections: Map<number, Connection>;
+}>({
+	isLoaded: false,
+	connections: new Map()
+});

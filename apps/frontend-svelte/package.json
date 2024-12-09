@@ -16,6 +16,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.49.0",
+		"@repo/db": "workspace:*",
 		"@repo/shared-schemas": "workspace:*",
 		"@repo/shared-types": "workspace:*",
 		"@sveltejs/adapter-auto": "^3.3.1",
@@ -55,8 +56,7 @@
 		"vite": "^5.4.11",
 		"vite-plugin-node-polyfills": "^0.17.0",
 		"vitest": "^2.1.8",
-		"zod": "^3.23.8",
-		"@repo/db": "workspace:*"
+		"zod": "^3.23.8"
 	},
 	"type": "module",
 	"dependencies": {
@@ -66,6 +66,7 @@
 		"@tanstack/table-core": "^8.20.5",
 		"ccxt": "^4.4.35",
 		"echarts": "^5.5.1",
+		"flatpickr": "^4.6.13",
 		"http-proxy-agent": "^7.0.2",
 		"https-proxy-agent": "^7.0.5",
 		"nprogress": "^0.2.0",

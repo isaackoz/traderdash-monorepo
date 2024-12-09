@@ -75,6 +75,10 @@ export type ExchangeConfig = {
      */
     proxyLocation: "USA" | "NETHERLANDS";
   };
+  /**
+   * Exchange specific options that will be added to ccxt options
+   */
+  options?: Record<string, unknown>;
 };
 
 export type ExchangeConfigs = Record<Exchanges, ExchangeConfig>;

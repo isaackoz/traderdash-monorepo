@@ -66,9 +66,37 @@ export const addUserExchangeSchema = z
 
 export type AddUserExchangeData = z.infer<typeof addUserExchangeSchema>;
 
-export const addTradeSchema = z.object({
-  exchangeConnectionId: z.coerce.number(),
-  marketSymbol: z.string(),
-});
+export const addTradeSchema = z
+  .object({
+    exchangeConnectionId: z.coerce.number(),
+    marketSymbol: z.string(),
+    side: z.enum(["buy", "sell"]),
+    initialAmount: z.coerce.number(),
+    entryPrice: z.number(),
+    fromTimestamp: z.coerce.number(),
+    toTimestamp: z.coerce.number(),
+    fromTradeId: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.marketSymbol.length < 3) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        type: "string",
+        minimum: 3,
+        inclusive: true,
+        message: "A market symbol is required",
+        path: ["marketSymbol"],
+      });
+    } else {
+      if (!/^[^/]+\/[^/]+$/.test(data.marketSymbol)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Invalid format. Must be QUOTE/PAIR, separated by a single /",
+          path: ["marketSymbol"],
+        });
+      }
+    }
+  });
 
 export type AddTradeData = z.infer<typeof addTradeSchema>;

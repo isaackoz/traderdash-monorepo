@@ -4,21 +4,26 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { type AddTradeMeta } from '$lib/types/trades';
 	import { connectionsState } from '$stores/connections.svelte';
 	import type { AddTradeData } from '@repo/shared-schemas';
 	import type { Market } from 'ccxt';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import type { SuperFormData } from 'sveltekit-superforms/client';
+	import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
 	let {
 		nextStep,
 		prevStep,
-		formData = $bindable()
+		form = $bindable(),
+		addTradeMeta = $bindable()
 	}: {
-		nextStep: () => void;
+		nextStep: (i?: number) => void;
 		prevStep: () => void;
-		formData: SuperFormData<AddTradeData>;
+		form: SuperForm<AddTradeData>;
+		addTradeMeta: AddTradeMeta;
 	} = $props();
+
+	const { form: formData } = form;
 
 	let isMounted = $state(false);
 	let isLoading = $state(false);
@@ -38,15 +43,28 @@
 			return;
 		}
 		$formData.marketSymbol = marketSymbol;
+		addTradeMeta.liveMarket = true;
 		nextStep();
+	}
+
+	function handleSelectManual() {
+		// Skip to last step
+		addTradeMeta.liveMarket = false;
+		addTradeMeta.trackType = 'manual';
+		$formData.marketSymbol = '';
+		nextStep(4);
 	}
 
 	onMount(async () => {
 		try {
-			const exchange = connectionsState.get($formData.exchangeConnectionId);
+			if (!connectionsState.isLoaded) {
+				error = 'Connections not loaded in memory';
+				return;
+			}
+			const exchange = connectionsState.connections.get($formData.exchangeConnectionId);
 			if (!exchange) {
 				// This should be impossible and never happen, but just in case
-				toast.error('Exchange not loaded in memory');
+				// toast.error('Exchange not loaded in memory');
 				prevStep();
 				return;
 			}
@@ -70,7 +88,7 @@
 	});
 </script>
 
-<div class="h-full overflow-y-auto">
+<div class="flex h-full w-full flex-col overflow-y-hidden">
 	<h3 class="mb-2 font-semibold">Select a market</h3>
 	<Separator />
 	{#if error}
@@ -80,7 +98,7 @@
 			{error}
 		</div>
 	{:else}
-		<div class="mx-2">
+		<div class="flex w-full flex-grow flex-col overflow-y-auto">
 			<Input
 				class=" mt-4"
 				placeholder="Search for a ticker..."
@@ -121,9 +139,12 @@
 				</tbody>
 			</table>
 
-			<p class="text-muted-foreground">
+			<p class="text-muted-foreground flex-grow">
 				Showing {filteredSpotMarkets.length} of {spotMarkets.length} available markets
 			</p>
+			<Button type="button" class="w-full" variant="ghost" onclick={handleSelectManual}
+				>Manual Input</Button
+			>
 		</div>
 	{/if}
 </div>

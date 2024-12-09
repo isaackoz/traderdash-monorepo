@@ -61,6 +61,9 @@ export const exchangeConfigs: ExchangeConfigs = {
       wsEnabled: true,
       proxyLocation: "NETHERLANDS",
     },
+    options: {
+      adjustForTimeDifference: true,
+    },
   },
   coinbase: {
     displayName: "Coinbase",
