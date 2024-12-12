@@ -18,9 +18,14 @@
 	import AddStepThree from './_components/add-step-three.svelte';
 	import AddStepFour from './_components/add-step-four.svelte';
 	import type { AddTradeMeta } from '$lib/types/trades';
+	import { handleAddTradeFinish } from '$lib/api/user/trade';
+	import { toast } from 'svelte-sonner';
+	import { invalidateAll } from '$app/navigation';
+	import { LoaderCircle } from 'lucide-svelte';
 
-	let step = $state<number>(3);
+	let step = $state<number>(1);
 	let open = $state(false);
+	let isSubmitting = $state(false);
 
 	function nextStep(i?: number) {
 		if (i) {
@@ -48,9 +53,24 @@
 		SPA: true,
 		resetForm: false,
 		validators: zod(addTradeSchema),
-		onUpdate({ form }) {
+		async onUpdate({ form }) {
 			if (form.valid) {
-				console.log(form.data);
+				try {
+					isSubmitting = true;
+					const { data, error } = await handleAddTradeFinish(form.data, formMeta);
+					if (error) {
+						toast.error(error.message);
+					} else {
+						toast.success(`Added trade! Id is ${data}`);
+						invalidateAll();
+						open = false;
+					}
+				} catch (e) {
+					console.error(e);
+					toast.error('Uh oh there was an unknown error.');
+				} finally {
+					isSubmitting = false;
+				}
 			}
 		}
 	});
@@ -80,6 +100,15 @@
 		{/snippet}
 	</SheetTrigger>
 	<SheetContent class="flex h-svh flex-col">
+		{#if isSubmitting}
+			<div
+				class="bg-background/80 absolute bottom-0 left-0 right-0 top-0 z-[99999] flex items-center justify-center"
+			>
+				<div class="animate-spin">
+					<LoaderCircle />
+				</div>
+			</div>
+		{/if}
 		<SheetHeader>
 			<SheetTitle>Add Trade</SheetTitle>
 			<SheetDescription>Add and track a new trade</SheetDescription>

@@ -10,7 +10,7 @@
 		TableHeader,
 		TableRow
 	} from '$lib/components/ui/table';
-	import { type AddTradeMeta } from '$lib/types/trades';
+	import { type AddTradeMeta, type AggregatedTrade } from '$lib/types/trades';
 	import { cn } from '$lib/utils';
 	import { getExchangeName } from '$lib/utils/exchange';
 	import { connectionsState } from '$stores/connections.svelte';
@@ -23,6 +23,7 @@
 	import { fade } from 'svelte/transition';
 	import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
 	import StepThreeSelect from './step-three-select.svelte';
+	import { getAggregatedTrades } from '$lib/utils/trades';
 	let {
 		nextStep,
 		form = $bindable(),
@@ -40,9 +41,9 @@
 	let error = $state<null | string>(null);
 	let isLoading = $state(false);
 	let isDetailsVisible = $state(false);
-	let detailItem = $state<Trade | null>(null);
+	let detailItem = $state<AggregatedTrade | null>(null);
 
-	let myTrades = $state<Trade[]>([]);
+	let myTrades = $state<AggregatedTrade[]>([]);
 
 	function handleSelectSkip() {
 		$formData.initialAmount = 0;
@@ -64,11 +65,12 @@
 			}
 
 			const ccxt = exchange.ccxtExchanges;
-			const trades = await ccxt.fetchMyTrades($formData.marketSymbol, undefined, 10, {
-				maxEntriesPerRequest: 10,
+			console.log(ccxt.apiKey);
+			const trades = await ccxt.fetchMyTrades($formData.marketSymbol, undefined, 500, {
 				paginate: true
 			});
-			myTrades = trades;
+			const aggregatedTrades = getAggregatedTrades(trades);
+			myTrades = aggregatedTrades;
 		} catch (e) {
 			console.error(e);
 			if (e instanceof Error) {
@@ -139,7 +141,7 @@
 								{trade?.symbol}
 							</TableCell>
 							<TableCell class="text-muted-foreground whitespace-nowrap">
-								{new Date(trade?.datetime ?? '').toLocaleDateString()}
+								{new Date(trade?.timestamp ?? '').toLocaleDateString()}
 							</TableCell>
 							<TableCell
 								class={cn(
@@ -147,7 +149,7 @@
 									trade.side === 'buy' ? 'text-green-500' : 'text-red-500'
 								)}
 							>
-								{trade.amount}
+								{trade.aggregatedAmount}
 							</TableCell>
 							<TableCell
 								class="flex h-fit w-full items-center justify-center  transition-colors group-hover:text-blue-500"

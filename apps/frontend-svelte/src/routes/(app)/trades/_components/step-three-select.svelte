@@ -3,7 +3,7 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Switch } from '$lib/components/ui/switch';
-	import type { AddTradeMeta } from '$lib/types/trades';
+	import type { AddTradeMeta, AggregatedTrade } from '$lib/types/trades';
 	import { cn } from '$lib/utils';
 	import type { AddTradeData } from '@repo/shared-schemas';
 	import type { Trade } from 'ccxt';
@@ -20,7 +20,7 @@
 		nextStep
 	}: {
 		isDetailsVisible: boolean;
-		detailItem: Trade;
+		detailItem: AggregatedTrade;
 		formData: SuperFormData<AddTradeData>;
 		nextStep: () => void;
 		addTradeMeta: AddTradeMeta;
@@ -31,7 +31,7 @@
 			// If the user wants to sync their trades, go to last step
 			// (we don't need a toTimestamp)
 			if (!detailItem) return;
-			const { amount, side, price, timestamp, id } = detailItem;
+			const { aggregatedAmount, side, price, timestamp, order } = detailItem;
 
 			// Set side
 			if (side === 'buy') {
@@ -41,7 +41,7 @@
 			}
 
 			// Set initial amount
-			$formData.initialAmount = Number(amount);
+			$formData.initialAmount = Number(aggregatedAmount);
 
 			// Set Entry price
 			$formData.entryPrice = Number(price);
@@ -50,7 +50,7 @@
 			$formData.fromTimestamp = Number(timestamp);
 
 			// Set the trade id
-			$formData.fromTradeId = id as string;
+			$formData.fromTradeId = order as string;
 			addTradeMeta.trackType = 'automatic';
 
 			nextStep();
@@ -61,7 +61,7 @@
 
 	function stepTwoContinue() {
 		if (!detailItem) return;
-		const { amount, side, price, timestamp, id } = detailItem;
+		const { aggregatedAmount, side, price, timestamp, order } = detailItem;
 
 		if (side === 'buy') {
 			$formData.side = 'buy';
@@ -69,7 +69,7 @@
 			$formData.side = 'sell';
 		}
 		// Set initial amount
-		$formData.initialAmount = Number(amount);
+		$formData.initialAmount = Number(aggregatedAmount);
 
 		// Set Entry price
 		$formData.entryPrice = Number(price);
@@ -78,7 +78,7 @@
 		$formData.fromTimestamp = Number(timestamp);
 
 		// Set the trade id
-		$formData.fromTradeId = id as string;
+		$formData.fromTradeId = order as string;
 		addTradeMeta.trackType = 'automatic';
 
 		// Set the toDate
@@ -105,12 +105,13 @@ or if they would like to track their trades to the current moment
 		onclick={() => {
 			isDetailsVisible = false;
 		}}
+		type="button"
 	>
 		<span class="text-red-500 group-hover:text-white">x</span>
 	</button>
 	<h4 class="text-xl font-bold">{detailItem.symbol}</h4>
 	<p class="text-muted-foreground">
-		{new Date(detailItem?.datetime ?? '').toLocaleString()} (local time)
+		{new Date(detailItem?.timestamp ?? '').toLocaleString()} (local time)
 	</p>
 	<Separator class="my-2 bg-black" />
 	{#if step === '1'}
@@ -125,7 +126,7 @@ or if they would like to track their trades to the current moment
 				<!--  -->
 				<div>Amount</div>
 				<div>
-					{detailItem.amount}
+					{detailItem.aggregatedAmount}
 					{detailItem.symbol?.split('/')[0] ?? ''}
 				</div>
 				<!--  -->
@@ -138,7 +139,7 @@ or if they would like to track their trades to the current moment
 				<!--  -->
 				<div>Cost</div>
 				<div>
-					{detailItem.cost}
+					{detailItem.aggregatedCost}
 				</div>
 				<!--  -->
 				<!--  -->
@@ -150,8 +151,8 @@ or if they would like to track their trades to the current moment
 				<!--  -->
 				<div>Fees</div>
 				<div>
-					{detailItem.fee?.cost?.toFixed(2)}
-					{detailItem.fee?.currency}
+					{detailItem.aggregatedFees?.toFixed(2)}
+					{detailItem.feeCurrency}
 				</div>
 				<!--  -->
 			</div>
@@ -184,7 +185,7 @@ or if they would like to track their trades to the current moment
 				<p class="text-lg font-semibold">Choose a date and time</p>
 				<p class="text-muted-foreground text-sm">
 					Choose a date and time anytime after {new Date(
-						detailItem?.datetime ?? ''
+						detailItem?.timestamp ?? ''
 					).toLocaleString()}. This will create and sync your trades up to this date. Any future
 					trades after this date and time will not be synced or added. You are still able to
 					manually add trades.
@@ -195,7 +196,7 @@ or if they would like to track their trades to the current moment
 					timePrecision="second"
 					placeholder=""
 					class="w-full [&>input]:w-full"
-					min={new Date(detailItem?.datetime ?? '')}
+					min={new Date(detailItem?.timestamp ?? '')}
 				/>
 			</div>
 			<div class="">

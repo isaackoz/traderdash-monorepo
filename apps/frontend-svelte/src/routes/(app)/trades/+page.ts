@@ -1,9 +1,7 @@
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ parent }) => {
-	const { isAuth } = await parent();
+export const load: PageLoad = async () => {
 	return {
-		isAuth,
 		showBreadcrumb: true,
 		label: 'My Trades'
 	};

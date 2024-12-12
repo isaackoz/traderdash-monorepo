@@ -8,7 +8,7 @@ export const load: PageLoad = async ({ parent }) => {
 		redirect(307, '/login/');
 	}
 
-	// For each connection we have, we want to
+	// Get connections
 
 	return {
 		user,

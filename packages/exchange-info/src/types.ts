@@ -1,6 +1,7 @@
-import { exchanges } from ".";
+import { ccxtExchanges, exchanges } from ".";
 
 export type Exchanges = (typeof exchanges)[number];
+export type CCXTExchanges = (typeof ccxtExchanges)[number];
 
 export type ExchangeConfig = {
   /**

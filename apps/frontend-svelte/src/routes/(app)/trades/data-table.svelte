@@ -2,11 +2,12 @@
 	import { type ColumnDef, getCoreRowModel } from '@tanstack/table-core';
 	import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import type { TradesItem } from '$lib/types/trades';
+	import type { TradesItem, TradesTableRow } from '$lib/types/trades';
 
 	import { tradesColumns } from './columns';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 
-	let { data, isLoading = false }: { data: TradesItem[]; isLoading: boolean } = $props();
+	let { data, isLoading = false }: { data: TradesTableRow[]; isLoading: boolean } = $props();
 
 	const table = createSvelteTable({
 		get data() {
@@ -56,7 +57,7 @@
 					</Table.Row>
 				{:else}
 					<Table.Row>
-						<Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>
+						<Table.Cell colspan={99} class="h-24 text-center">No results.</Table.Cell>
 					</Table.Row>
 				{/each}
 			{/if}

@@ -34,7 +34,7 @@
 		try {
 			const accountBalances = (
 				await Promise.all(
-					connectionsState.entries().map(async (connection) => {
+					connectionsState.connections.entries().map(async (connection) => {
 						const exchangeData = connection[1].data;
 						const exchange = connection[1].ccxtExchanges;
 						await exchange.loadMarkets();

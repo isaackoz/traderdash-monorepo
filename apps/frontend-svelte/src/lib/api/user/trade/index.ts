@@ -1,9 +1,13 @@
 import type { TApiData } from '$lib/types/api';
-import type { AddTradeMeta } from '$lib/types/trades';
+import type { AddTradeMeta, TradesTableRow } from '$lib/types/trades';
 import type { AddTradeData, AddTradeToDbData } from '@repo/shared-schemas';
 import type { TradeInsert, TradeItemInsert } from '@repo/db';
 import { connectionsState } from '$stores/connections.svelte';
 import type { Trade } from 'ccxt';
+import { PUBLIC_BACKEND_API } from '$env/static/public';
+import type { TAPIUserTradesGet } from '@repo/shared-types';
+import { getAverageEntryPrice, getTotalPositionSize } from '$lib/utils/trades';
+import type { CCXTExchanges } from '@repo/exchange-info/src/types';
 
 /**
  * Handle add trade logic on the client side before sending and saving data in the database
@@ -23,7 +27,7 @@ import type { Trade } from 'ccxt';
 export const handleAddTradeFinish = async (
 	addTradeData: AddTradeData,
 	addTradeMeta: AddTradeMeta
-): Promise<TApiData<boolean>> => {
+): Promise<TApiData<string>> => {
 	try {
 		const {
 			entryPrice,
@@ -64,18 +68,10 @@ export const handleAddTradeFinish = async (
 					timestamp: fromTimestamp
 				};
 
-				const { data, error } = await addTrade({
+				return await addTrade({
 					tradeData: newTrade,
 					tradeItems: [firstTradeItem]
 				});
-				if (error) {
-					return {
-						error: {
-							message: error.message
-						}
-					};
-				}
-				// todo save data to db api
 			} else {
 				// Lastly, we'll deal with the primary use case where a user tracks from a specific trade up to
 				// either a toTimestamp, or realtime. In both cases, we use CCXT
@@ -92,6 +88,7 @@ export const handleAddTradeFinish = async (
 						paginate: true,
 						until: Date.now()
 					});
+					console.log(tradeHistory);
 				} else {
 					// Otherwise, we'll get all trades fromTimestamp to toTimestamp,
 					tradeHistory = await ccxtExchange.fetchMyTrades(marketSymbol, fromTimestamp, undefined, {
@@ -127,19 +124,10 @@ export const handleAddTradeFinish = async (
 					direction: side
 				};
 
-				const { data, error } = await addTrade({
+				return await addTrade({
 					tradeData: newTrade,
 					tradeItems: tradeItems
 				});
-				if (error) {
-					return {
-						error: {
-							message: error.message
-						}
-					};
-				}
-
-				// todo save to database
 			}
 		} else {
 			// We don't need to access the exchange using CCXT. We just simply add straight to the database
@@ -165,17 +153,10 @@ export const handleAddTradeFinish = async (
 				timestamp: fromTimestamp
 			};
 
-			const { data, error } = await addTrade({
+			return await addTrade({
 				tradeData: newTrade,
 				tradeItems: [firstTradeItem]
 			});
-			if (error) {
-				return {
-					error: {
-						message: error.message
-					}
-				};
-			}
 		}
 	} catch (e) {
 		console.error(e);
@@ -195,9 +176,28 @@ export const handleAddTradeFinish = async (
 };
 
 //
-export const addTrade = async (tradeData: AddTradeToDbData): Promise<TApiData<boolean>> => {
+export const addTrade = async (tradeData: AddTradeToDbData): Promise<TApiData<string>> => {
 	try {
-		//
+		const res = await fetch(`${PUBLIC_BACKEND_API}/user/trades`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(tradeData)
+		});
+
+		if (!res.ok) {
+			return {
+				error: {
+					message: `Failed to add trade: ${await res.text()}`
+				}
+			};
+		}
+		// On a succesful response, it will just return a string with the trade id
+		const tradeId = await res.text();
+		return {
+			data: tradeId
+		};
 	} catch (e) {
 		console.error(e);
 		if (e instanceof Error) {
@@ -213,4 +213,83 @@ export const addTrade = async (tradeData: AddTradeToDbData): Promise<TApiData<bo
 			}
 		};
 	}
+};
+
+export const getTrades = async (): Promise<TApiData<TAPIUserTradesGet[]>> => {
+	try {
+		const res = await fetch(`${PUBLIC_BACKEND_API}/user/trades`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (!res.ok) {
+			return {
+				error: {
+					message: `Failed to add trade: ${await res.text()}`
+				}
+			};
+		}
+
+		const data = (await res.json()) as TAPIUserTradesGet[];
+
+		return {
+			data: data
+		};
+	} catch (e: unknown) {
+		console.error(e);
+		return {
+			error: {
+				message: 'Unknown error occured'
+			}
+		};
+	}
+};
+
+export type TradeItemsWithExchanges = {
+	tradeitems: TradesTableRow[];
+	exchangeWithTickers: {
+		exchangeId: CCXTExchanges;
+		tickerSymbols: string[];
+	}[];
+};
+
+export const tradesToTradeItems = (trades: TAPIUserTradesGet[]): TradeItemsWithExchanges => {
+	// Keep a list of exchanges to subscribe to
+	const exchangeWithTickers: TradeItemsWithExchanges['exchangeWithTickers'] = [];
+	function addTickerToExchange(exchange: CCXTExchanges, ticker: string) {
+		// Find an existing entry for the exchange
+		let obj = exchangeWithTickers.find((entry) => entry.exchangeId === exchange);
+		if (!obj) {
+			// If not found, create a new entry
+			obj = { exchangeId: exchange, tickerSymbols: [] };
+			exchangeWithTickers.push(obj);
+		}
+		// Add the ticker symbol to the list if not already present
+		if (!obj.tickerSymbols.includes(ticker)) {
+			obj.tickerSymbols.push(ticker);
+		}
+	}
+
+	const tradeItems: TradesTableRow[] = trades.map((trade): TradesTableRow => {
+		const { exchangeId, marketSymbol } = trade;
+		let exchangeIdFormatted: CCXTExchanges;
+		if (exchangeId === 'traderdash') {
+			exchangeIdFormatted = 'coinbase';
+		} else {
+			exchangeIdFormatted = exchangeId as CCXTExchanges;
+		}
+		addTickerToExchange(exchangeIdFormatted, marketSymbol);
+		return {
+			...trade,
+			calculatedAverageEntry: getAverageEntryPrice(trade.tradeItems),
+			calculatedPositionSize: getTotalPositionSize(trade.tradeItems)
+		};
+	});
+
+	return {
+		exchangeWithTickers: exchangeWithTickers,
+		tradeitems: tradeItems
+	};
 };

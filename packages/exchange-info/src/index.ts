@@ -17,6 +17,7 @@ export type { ExchangeConfigs, ExchangeConfig, Exchanges };
  * determine what kind of authentication is required for each exchange and other settings.
  */
 export const exchanges = ["traderdash", "coinbase", "bybit", "kraken"] as const;
+export const ccxtExchanges = ["coinbase", "bybit", "kraken"] as const;
 export const proxyLocations = {
   USA: "https://usa.proxy.traderdash.app/",
   NETHERLANDS: "https://europe.proxy.traderdash.app/",

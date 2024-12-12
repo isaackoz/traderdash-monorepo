@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev --host",
 		"build": "vite build",
-		"preview": "vite preview",
+		"preview": "vite preview --host",
 		"test": "npm run test:integration && npm run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -62,10 +62,10 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource-variable/work-sans": "^5.1.0",
+		"@ikoz/ccxt-traderdash": "^4.4.39",
 		"@repo/exchange-info": "workspace:*",
 		"@tanstack/svelte-query": "https://pkg.pr.new/@tanstack/svelte-query@28f98f9",
 		"@tanstack/table-core": "^8.20.5",
-		"ccxt": "^4.4.35",
 		"echarts": "^5.5.1",
 		"http-proxy-agent": "^7.0.2",
 		"https-proxy-agent": "^7.0.5",

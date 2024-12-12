@@ -5,11 +5,15 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 export default defineConfig({
 	plugins: [
 		nodePolyfills({
-			include: ['buffer'],
-			protocolImports: true
+			include: ['buffer', 'util', 'stream', 'net', 'url']
 		}),
 		sveltekit()
 	],
+	resolve: {
+		alias: {
+			net: 'node-stdlib-browser/net'
+		}
+	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},

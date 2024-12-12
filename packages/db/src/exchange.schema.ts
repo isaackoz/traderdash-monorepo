@@ -13,6 +13,7 @@ import { usersTable } from "./user.schema";
 import { exchanges } from "@repo/exchange-info";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 export const userExchangeConnectionsTable = pgTable(
   "user_exchange_connection",
@@ -43,6 +44,17 @@ export const userExchangeConnectionsTable = pgTable(
   }
 );
 
+export const userExchangeConnectionsRelations = relations(
+  userExchangeConnectionsTable,
+  ({ many, one }) => ({
+    trades: many(tradesTable),
+    user: one(usersTable, {
+      fields: [userExchangeConnectionsTable.userId],
+      references: [usersTable.id],
+    }),
+  })
+);
+
 export type ExchangeConnectionSelect =
   typeof userExchangeConnectionsTable.$inferSelect;
 export type ExchangeConnectionInsert =
@@ -55,7 +67,7 @@ export const tradesTable = pgTable("trades", {
     .references(() => userExchangeConnectionsTable.id),
 
   tickerBase: text("ticker_base").notNull(),
-  tickerQuote: text("ticker_base").notNull(),
+  tickerQuote: text("ticker_quote").notNull(),
   marketSymbol: text("market_symbol").notNull(),
 
   fromTimestamp: bigint("from_timestamp", { mode: "number" }).notNull(),
@@ -66,16 +78,33 @@ export const tradesTable = pgTable("trades", {
   // Whether or not to use websocket to get price
   liveMarket: boolean("live_market").notNull(),
 
+  lastSyncTimestamp: bigint("last_sync_timestamp", {
+    mode: "number",
+  }).notNull(),
+
   type: text("type", { enum: ["SPOT", "FUTURE", "OPTION"] }).notNull(),
   direction: text("direction", { enum: ["buy", "sell"] }),
 });
 
+export const tradesRelations = relations(tradesTable, ({ many, one }) => ({
+  tradeItems: many(tradeItemTable),
+  userExchange: one(userExchangeConnectionsTable, {
+    fields: [tradesTable.userExchangeId],
+    references: [userExchangeConnectionsTable.id],
+  }),
+}));
+
 export type TradeSelect = typeof tradesTable.$inferSelect;
-export type TradeInsert = typeof tradesTable.$inferInsert;
-export const insertTradeSchema = createInsertSchema(tradesTable);
+export type TradeInsert = Omit<
+  typeof tradesTable.$inferInsert,
+  "lastSyncTimestamp"
+>;
+export const insertTradeSchema = createInsertSchema(tradesTable).omit({
+  lastSyncTimestamp: true,
+});
 
 // 1 trade table < --- > many trade_items
-export const tradeItem = pgTable("trade_item", {
+export const tradeItemTable = pgTable("trade_item", {
   id: uuid("id").primaryKey().defaultRandom(),
   tradeId: uuid("trade_id")
     .notNull()
@@ -90,8 +119,15 @@ export const tradeItem = pgTable("trade_item", {
   timestamp: bigint("timestamp", { mode: "number" }),
 });
 
-export type TradeItemSelect = typeof tradeItem.$inferSelect;
-export const insertTradeItemSchema = createInsertSchema(tradeItem).omit({
+export const tradeItemRelations = relations(tradeItemTable, ({ one }) => ({
+  trade: one(tradesTable, {
+    fields: [tradeItemTable.tradeId],
+    references: [tradesTable.id],
+  }),
+}));
+
+export type TradeItemSelect = typeof tradeItemTable.$inferSelect;
+export const insertTradeItemSchema = createInsertSchema(tradeItemTable).omit({
   tradeId: true,
 });
 export type TradeItemInsert = z.infer<typeof insertTradeItemSchema>;

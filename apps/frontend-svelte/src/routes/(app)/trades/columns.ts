@@ -1,14 +1,19 @@
-import type { TradesItem } from '$lib/types/trades';
+import { renderComponent } from '$lib/components/ui/data-table';
+import type { TradesTableRow } from '$lib/types/trades';
+import { getExchangeName } from '$lib/utils/exchange';
 import type { ColumnDef } from '@tanstack/table-core';
+import PriceCell from './_components/price-cell.svelte';
+import PnlCell from './_components/pnl-cell.svelte';
 
-export const tradesColumns: ColumnDef<TradesItem>[] = [
+export const tradesColumns: ColumnDef<TradesTableRow>[] = [
 	{
-		accessorKey: 'tickerBase',
-		header: 'Ticker'
+		accessorKey: 'marketSymbol',
+		header: 'Market'
 	},
 	{
 		accessorKey: 'exchangeId',
-		header: 'Exchange'
+		header: 'Exchange',
+		cell: ({ row }) => getExchangeName(row.original.exchangeId)
 	},
 	{
 		accessorKey: 'type',
@@ -19,34 +24,32 @@ export const tradesColumns: ColumnDef<TradesItem>[] = [
 		header: 'Direction'
 	},
 	{
-		id: 'positionSize',
+		accessorKey: 'calculatedPositionSize',
 		header: 'Position Size'
 	},
 	{
-		id: 'avgEntry',
+		accessorKey: 'calculatedAverageEntry',
 		header: 'Average Entry'
 	},
 	{
-		id: 'pnl',
-		header: 'PNL'
-	}
-];
-
-export const mockTrades: TradesItem[] = [
-	{
-		id: 'a-1',
-		direction: 'LONG',
-		tickerBase: 'BTC',
-		tickerQuote: 'USD',
-		exchangeId: 'coinbase',
-		type: 'SPOT'
+		id: 'price',
+		header: 'Price',
+		cell: ({ row }) => {
+			return renderComponent(PriceCell, {
+				exchangeId: row.original.exchangeId,
+				marketSymbol: row.original.marketSymbol,
+				quote: row.original.tickerQuote
+			});
+		}
 	},
 	{
-		id: 'a-2',
-		direction: 'LONG',
-		tickerBase: 'ETH',
-		tickerQuote: 'BTC',
-		exchangeId: 'coinbase',
-		type: 'SPOT'
+		id: 'pnl',
+		header: 'PNL',
+		cell: ({ row }) => {
+			return renderComponent(PnlCell, row.original);
+		}
+	},
+	{
+		id: 'actions'
 	}
 ];

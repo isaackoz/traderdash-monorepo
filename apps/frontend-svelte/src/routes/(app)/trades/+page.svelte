@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
+	import type { PageData } from './$types';
 	import AddTrade from './add-trade.svelte';
-	import { mockTrades } from './columns';
 	import DataTable from './data-table.svelte';
+	let { data }: { data: PageData } = $props();
+
+	// let tradeItem = $derived.by<TradesItem[]>(() => {});
 
 	let error = $state<null | string>(null);
 </script>
@@ -29,7 +31,7 @@
 			</div>
 		</div>
 		<div class="mt-8">
-			<DataTable data={mockTrades} isLoading={false} />
+			<DataTable data={data.myTrades.tradeitems} isLoading={false} />
 		</div>
 	</div>
 {/if}

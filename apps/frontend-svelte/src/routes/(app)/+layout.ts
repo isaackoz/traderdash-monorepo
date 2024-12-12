@@ -49,7 +49,7 @@ export const load: LayoutLoad = async ({ parent, url }) => {
 		}
 
 		// Create a CCXT class for each connection
-		const exchangeConnection = new ccxt.pro[connection.exchangeId]({
+		const exchangeConnection = new ccxt[connection.exchangeId]({
 			proxy: getProxyUrl(connection),
 			apiKey: connection.apiKey,
 			secret: connection.secret?.replace(/\\n/g, '\n').trim(),

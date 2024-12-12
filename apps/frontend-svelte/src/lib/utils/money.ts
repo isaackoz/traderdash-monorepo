@@ -13,3 +13,16 @@ export const formatCurrency = (
 		currency: intlCurrency
 	}).format(Number(value));
 };
+
+const fiats: Record<string, string> = {
+	USD: 'USD',
+	USDT: 'USD',
+	USDC: 'USD'
+};
+export const formatMarket = (value: string | number, quote: string): string => {
+	if (fiats[quote]) {
+		return formatCurrency(value, { intlCurrency: fiats[quote] });
+	} else {
+		return Number(value).toFixed(8);
+	}
+};
