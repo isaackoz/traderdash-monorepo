@@ -52,7 +52,7 @@
 
 <div class="flex h-full w-full flex-col overflow-y-hidden">
 	<h3 class="font-semibold">Overview</h3>
-	<p class="text-muted-foreground my-2 text-sm">
+	<p class="my-2 text-sm text-muted-foreground">
 		Once you add a trade, you will be able to track it and view its performance.
 	</p>
 	<Separator />

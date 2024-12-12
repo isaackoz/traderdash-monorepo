@@ -15,7 +15,7 @@ const config = {
 			fallback: '404.html'
 		}),
 		alias: {
-			'$stores': './src/lib/stores'
+			$stores: './src/lib/stores'
 		}
 	}
 };

@@ -127,13 +127,13 @@
 					{:else}
 						{#each filteredSpotMarkets as market}
 							<tr
-								class="hover:bg-muted border transition-colors ease-out hover:cursor-pointer"
+								class="border transition-colors ease-out hover:cursor-pointer hover:bg-muted"
 								onclick={() => handleSelectMarket(market?.symbol)}
 							>
 								<td class=" p-1">
 									{market?.symbol}
 								</td>
-								<td class="text-muted-foreground p-1">
+								<td class="p-1 text-muted-foreground">
 									{market?.type}
 								</td>
 							</tr>
@@ -142,7 +142,7 @@
 				</tbody>
 			</table>
 
-			<p class="text-muted-foreground flex-grow">
+			<p class="flex-grow text-muted-foreground">
 				Showing {filteredSpotMarkets.length} of {spotMarkets.length} available markets
 			</p>
 			<Button type="button" class="w-full" variant="ghost" onclick={handleSelectManual}

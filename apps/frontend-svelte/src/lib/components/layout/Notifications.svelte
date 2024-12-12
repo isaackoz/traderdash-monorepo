@@ -10,12 +10,12 @@
 			<BellIcon class="size-5" />
 		</Button>
 	</Popover.Trigger>
-	<Popover.Content class="bg-card w-full max-w-xs px-0" align="start">
+	<Popover.Content class="w-full max-w-xs bg-card px-0" align="start">
 		<h2 class="font-semibold">Notifications</h2>
 		<ul class="mt-4 flex w-full flex-col space-y-1">
 			<a href="/notifications">
 				<li
-					class="hover:bg-card-foreground/5 relative flex border-b border-t py-2 pl-4 pr-8 text-sm transition-colors"
+					class="relative flex border-b border-t py-2 pl-4 pr-8 text-sm transition-colors hover:bg-card-foreground/5"
 				>
 					<p>This is a notifcations and this is a longer one and I think its a good one</p>
 					<div class="absolute right-2 top-1/2 -translate-y-1/2">

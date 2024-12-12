@@ -1,5 +1,5 @@
 <div class="flex h-screen w-full items-center justify-center overflow-y-hidden">
-	<div class="bg-foreground my-4 h-full w-full max-w-xl rounded-xl">
+	<div class="my-4 h-full w-full max-w-xl rounded-xl bg-foreground">
 		<iframe
 			class=""
 			title="waitlist"

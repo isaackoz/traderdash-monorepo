@@ -102,7 +102,7 @@
 	<SheetContent class="flex h-svh flex-col">
 		{#if isSubmitting}
 			<div
-				class="bg-background/80 absolute bottom-0 left-0 right-0 top-0 z-[99999] flex items-center justify-center"
+				class="absolute bottom-0 left-0 right-0 top-0 z-[99999] flex items-center justify-center bg-background/80"
 			>
 				<div class="animate-spin">
 					<LoaderCircle />

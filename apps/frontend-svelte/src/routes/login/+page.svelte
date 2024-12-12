@@ -76,7 +76,7 @@
 			<CardContent class="w-full">
 				{#if isAlreadySent === false}
 					{#if isSuccess}
-						<div class="bg-muted rounded-lg p-2 text-sm">Success! Check your email</div>
+						<div class="rounded-lg bg-muted p-2 text-sm">Success! Check your email</div>
 					{:else}
 						<form
 							onsubmit={handleSendLoginLink}
@@ -116,7 +116,7 @@
 						</form>
 					{/if}
 				{:else}
-					<div class="bg-muted rounded-lg p-2 text-sm">
+					<div class="rounded-lg bg-muted p-2 text-sm">
 						<p>A code has already been sent to your email.</p>
 						<button onclick={clearLoginAttempt} class="text-blue-500 underline">
 							No email? Click here to reset the process

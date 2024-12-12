@@ -15,7 +15,7 @@
 </script>
 
 <header
-	class="bg-muted/20 border-muted flex h-14 w-full items-center justify-between border-b px-2 py-1 xl:px-4"
+	class="flex h-14 w-full items-center justify-between border-b border-muted bg-muted/20 px-2 py-1 xl:px-4"
 >
 	<div id="breadcrumb">
 		<Breadcrumbs />

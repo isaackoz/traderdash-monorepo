@@ -27,7 +27,7 @@
 
 	{#if $serverStatus === 'dead'}
 		<div
-			class="bg-muted text-foreground fixed bottom-12 right-1/2 z-[999] translate-x-1/2 rounded-xl border-2 border-red-900 p-2 shadow-sm shadow-orange-900"
+			class="fixed bottom-12 right-1/2 z-[999] translate-x-1/2 rounded-xl border-2 border-red-900 bg-muted p-2 text-foreground shadow-sm shadow-orange-900"
 			in:fade
 			out:fade
 		>
@@ -42,8 +42,8 @@
 	{/if}
 
 	{#if data.isAuth}
-		<div class="bg-background flex h-screen w-full overflow-hidden">
-			<ScrollArea class="border-muted max-h-screen border-r pr-2" type="hover">
+		<div class="flex h-screen w-full overflow-hidden bg-background">
+			<ScrollArea class="max-h-screen border-r border-muted pr-2" type="hover">
 				<aside class=" hidden min-h-screen flex-col p-4 xl:flex xl:w-[250px]">
 					<!-- Logo -->
 					<div class="flex">

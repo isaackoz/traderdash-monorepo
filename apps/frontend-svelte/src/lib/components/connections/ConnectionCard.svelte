@@ -21,7 +21,7 @@
 
 <a {href}>
 	<Card
-		class="bg-muted hover:bg-muted/90 drop-shadow-xl  transition-all ease-out hover:cursor-pointer active:scale-[0.99]"
+		class="bg-muted drop-shadow-xl transition-all  ease-out hover:cursor-pointer hover:bg-muted/90 active:scale-[0.99]"
 	>
 		<CardContent class="">
 			<div class="flex items-center space-x-4">
@@ -35,7 +35,7 @@
 				</h3>
 			</div>
 			<div class="mt-4">
-				<p class="text-primary/90 line-clamp-2 text-sm">{description}</p>
+				<p class="line-clamp-2 text-sm text-primary/90">{description}</p>
 			</div>
 		</CardContent>
 	</Card>

@@ -97,11 +97,11 @@ or if they would like to track their trades to the current moment
 -->
 
 <div
-	class="bg-muted absolute bottom-0 left-0 right-0 top-0 z-10 flex min-h-[620px] flex-col rounded-md p-4"
+	class="absolute bottom-0 left-0 right-0 top-0 z-10 flex min-h-[620px] flex-col rounded-md bg-muted p-4"
 	transition:fade={{ duration: 100 }}
 >
 	<button
-		class="bg-muted group absolute right-4 top-2 z-20 flex size-6 items-center justify-center rounded-full transition-colors hover:cursor-pointer hover:bg-red-600"
+		class="group absolute right-4 top-2 z-20 flex size-6 items-center justify-center rounded-full bg-muted transition-colors hover:cursor-pointer hover:bg-red-600"
 		onclick={() => {
 			isDetailsVisible = false;
 		}}
@@ -157,7 +157,7 @@ or if they would like to track their trades to the current moment
 				<!--  -->
 			</div>
 			<div
-				class="bg-background mb-4 mt-auto flex flex-row items-center justify-between rounded-lg border p-4"
+				class="mb-4 mt-auto flex flex-row items-center justify-between rounded-lg border bg-background p-4"
 			>
 				<div class="flex items-center space-x-2">
 					<label class="font-semibold" for="">Sync trades up to date</label>
@@ -183,7 +183,7 @@ or if they would like to track their trades to the current moment
 		<div class="flex flex-grow flex-col justify-between" in:fade>
 			<div>
 				<p class="text-lg font-semibold">Choose a date and time</p>
-				<p class="text-muted-foreground text-sm">
+				<p class="text-sm text-muted-foreground">
 					Choose a date and time anytime after {new Date(
 						detailItem?.timestamp ?? ''
 					).toLocaleString()}. This will create and sync your trades up to this date. Any future

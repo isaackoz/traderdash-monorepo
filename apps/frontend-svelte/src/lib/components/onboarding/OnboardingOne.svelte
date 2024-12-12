@@ -23,7 +23,7 @@
 	</div>
 	<div class="mt-8">
 		<h4 class="text-xl font-semibold">Welcome to TraderDash.app</h4>
-		<p class="text-primary/90 mt-2 text-sm">
+		<p class="mt-2 text-sm text-primary/90">
 			TraderDash is your all-in-one platform for tracking your trades across multiple exchanges and
 			currencies. TraderDash was made by traders for traders. With that in mind, we know that
 			tracking and analyzing trades is something that nobody wants to do manually. Our goal is for

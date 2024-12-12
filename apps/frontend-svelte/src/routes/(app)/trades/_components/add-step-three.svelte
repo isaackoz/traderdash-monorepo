@@ -130,7 +130,7 @@
 					{/if}
 					{#each myTrades as trade}
 						<TableRow
-							class="hover:bg-muted group whitespace-nowrap rounded-md text-xs transition-colors ease-out hover:cursor-pointer [&>td]:h-12"
+							class="group whitespace-nowrap rounded-md text-xs transition-colors ease-out hover:cursor-pointer hover:bg-muted [&>td]:h-12"
 							onclick={(e) => {
 								e.preventDefault();
 								detailItem = trade;
@@ -140,7 +140,7 @@
 							<TableCell class="h-fit text-center">
 								{trade?.symbol}
 							</TableCell>
-							<TableCell class="text-muted-foreground whitespace-nowrap">
+							<TableCell class="whitespace-nowrap text-muted-foreground">
 								{new Date(trade?.timestamp ?? '').toLocaleDateString()}
 							</TableCell>
 							<TableCell

@@ -28,7 +28,7 @@
 				</div>
 			</div>
 		</Collapsible.Trigger>
-		<Collapsible.Content class="border-primary/40 ml-10 mt-2 border-l">
+		<Collapsible.Content class="ml-10 mt-2 border-l border-primary/40">
 			{#each children as child}
 				<Button variant="link" href={child.href} class="w-full justify-start">
 					{child.label}

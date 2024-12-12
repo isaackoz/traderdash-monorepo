@@ -45,7 +45,7 @@
 	});
 </script>
 
-<Card class="from-muted/40 to-background w-[500px] bg-gradient-to-t">
+<Card class="w-[500px] bg-gradient-to-t from-muted/40 to-background">
 	<CardHeader class="flex w-full flex-row justify-between py-2">
 		<div></div>
 		<div class="flex flex-col">

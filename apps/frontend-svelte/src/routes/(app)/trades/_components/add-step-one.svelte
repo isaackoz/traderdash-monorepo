@@ -35,7 +35,7 @@
 						{#each connectionsState.connections as [id, connection]}
 							<li>
 								<button
-									class="bg-muted hover:bg-muted-foreground/10 flex h-14 w-full rounded-xl transition-all hover:cursor-pointer"
+									class="flex h-14 w-full rounded-xl bg-muted transition-all hover:cursor-pointer hover:bg-muted-foreground/10"
 									onclick={() => handleSelection(id)}
 									type="button"
 								>

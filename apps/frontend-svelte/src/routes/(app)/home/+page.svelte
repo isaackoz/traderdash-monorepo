@@ -1,5 +1,1 @@
-
-
-<div>
-  Hello this is the home
-</div>
+<div>Hello this is the home</div>

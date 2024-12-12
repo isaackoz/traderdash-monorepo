@@ -12,7 +12,7 @@
 	<h1 class="text-2xl font-bold">
 		{title}
 	</h1>
-	<p class="text-primary/50 text-sm">
+	<p class="text-sm text-primary/50">
 		{subtitle}
 	</p>
 </div>

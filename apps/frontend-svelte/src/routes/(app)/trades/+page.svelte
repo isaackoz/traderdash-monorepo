@@ -15,7 +15,7 @@
 	>
 		<p>Uh oh there was an error loading your portfolio.</p>
 		<code>Reason: {error}</code>
-		<div class="text-foreground mt-4 text-center">
+		<div class="mt-4 text-center text-foreground">
 			<p>
 				Check if your API keys are valid. If the problem still persists, contact support or hit F12
 				and view the error message in the developer console.
