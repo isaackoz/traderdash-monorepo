@@ -5,17 +5,17 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 export default defineConfig({
 	plugins: [
 		nodePolyfills({
-			include: ['buffer', 'util', 'stream', 'net', 'url']
+			include: ['buffer', 'util', 'stream', 'url']
 		}),
 		sveltekit()
 	],
-	resolve: {
-		alias: {
-			net: 'node-stdlib-browser/net'
-		}
-	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-	optimizeDeps: { include: ['http-proxy-agent', 'https-proxy-agent', 'socks-proxy-agent'] }
+	resolve: {
+		alias: {
+			'node:net': '/etc/mock-node-isip.js'
+		}
+	},
+	optimizeDeps: { include: ['ccxt'] }
 });

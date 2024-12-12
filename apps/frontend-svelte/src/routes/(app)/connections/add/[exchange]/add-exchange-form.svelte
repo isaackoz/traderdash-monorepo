@@ -3,7 +3,7 @@
 	import { defaults, setError, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { addUserExchangeSchema } from '@repo/shared-schemas';
-	import ccxt, { exchanges } from 'ccxt';
+	import ccxt from 'ccxt';
 	import {
 		FormControl,
 		FormDescription,
@@ -152,7 +152,7 @@
 
 <div>
 	<h1 class="text-3xl font-bold">Add {exchangeInfo.displayName}</h1>
-	<p class="mt-1 text-sm text-muted-foreground">
+	<p class="text-muted-foreground mt-1 text-sm">
 		For your security, TraderDash only uses Read-Only APIs on the frontend for each exchange (we
 		don't use it in the backend). If your exchange offers an option for read-only API keys, we
 		highly recommend you use that. TraderDash will store your API keys encrypted using standard
@@ -162,7 +162,7 @@
 	</p>
 </div>
 <form use:enhance method="POST" class="mt-8 space-y-8">
-	<div class="grid grid-cols-2 rounded-lg border-muted bg-muted/50 p-8">
+	<div class="border-muted bg-muted/50 grid grid-cols-2 rounded-lg p-8">
 		<div class="font-semibold">General</div>
 		<div>
 			<FormField {form} name="nickname">
@@ -180,7 +180,7 @@
 		</div>
 	</div>
 	{#if exchangeInfo.authentication.enabled}
-		<div class="grid grid-cols-2 rounded-lg border-muted bg-muted/50 p-8">
+		<div class="border-muted bg-muted/50 grid grid-cols-2 rounded-lg p-8">
 			<div class="font-semibold">Exchange API Keys</div>
 			<div class="space-y-8">
 				{#if exchangeInfo.authentication.requireApiKey}
@@ -271,7 +271,7 @@
 						</CollapsibleTrigger>
 					</div>
 					<CollapsibleContent>
-						<div class="flex flex-col rounded-lg bg-muted p-4">
+						<div class="bg-muted flex flex-col rounded-lg p-4">
 							<!-- <FormField
 								class="border-muted bg-background mt-2 flex flex-row items-center justify-between space-x-2 rounded-lg border p-4"
 								{form}
@@ -293,7 +293,7 @@
 								</FormControl>
 							</FormField> -->
 							<FormField
-								class="mt-2 flex flex-row items-center justify-between space-x-2 rounded-lg border border-muted bg-background p-4"
+								class="border-muted bg-background mt-2 flex flex-row items-center justify-between space-x-2 rounded-lg border p-4"
 								{form}
 								name="noProxy"
 							>
