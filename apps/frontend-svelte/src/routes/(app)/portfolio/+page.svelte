@@ -28,7 +28,7 @@
 		return buildTreemapData(data);
 	});
 
-	$inspect(treemapData);
+	$inspect('connections state', connectionsState);
 
 	onMount(async () => {
 		try {
@@ -91,7 +91,7 @@
 			/**
 			 * Update ticker data in the $state
 			 */
-
+			console.log('Setting data to', accountBalances);
 			data = accountBalances;
 		} catch (e) {
 			if (e instanceof Error) {
@@ -114,7 +114,7 @@
 	>
 		<p>Uh oh there was an error loading your portfolio.</p>
 		<code>Reason: {error}</code>
-		<div class="mt-4 text-center text-foreground">
+		<div class="text-foreground mt-4 text-center">
 			<p>
 				Check if your API keys are valid. If the problem still persists, contact support or hit F12
 				and view the error message in the developer console.
@@ -132,7 +132,7 @@
 		{:else}
 			<div class="mb-12 flex h-96 w-full space-x-8">
 				{#key summaryData}
-					<div class="h-96 w-1/3 rounded-3xl bg-muted p-8">
+					<div class="bg-muted h-96 w-1/3 rounded-3xl p-8">
 						<h2 class="flex flex-col text-xl">
 							<span> Portfolio Total </span>
 							<span class="text-4xl font-semibold text-green-500">
@@ -140,7 +140,7 @@
 							</span>
 						</h2>
 						<div class="mt-4">
-							<span class="text-lg text-muted-foreground">Total By Exchange</span>
+							<span class="text-muted-foreground text-lg">Total By Exchange</span>
 							<ScrollArea class="h-full">
 								<div class="grid [grid-template-columns:auto_auto_1fr;]">
 									{#each summaryData.totalByExchange as exchangeTotal, index}
@@ -154,12 +154,12 @@
 					</div>
 				{/key}
 				{#key aggregatedTotalByExchange}
-					<div class="h-96 w-1/3 rounded-3xl bg-muted p-8">
+					<div class="bg-muted h-96 w-1/3 rounded-3xl p-8">
 						<div use:pieChart={aggregatedTotalByExchange} class="h-full w-full"></div>
 					</div>
 				{/key}
 				{#key treemapData}
-					<div class="h-96 w-1/3 rounded-3xl bg-muted p-8">
+					<div class="bg-muted h-96 w-1/3 rounded-3xl p-8">
 						<div use:tickerTreeMap={treemapData} class="h-full w-full"></div>
 					</div>
 				{/key}

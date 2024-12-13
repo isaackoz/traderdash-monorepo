@@ -1,6 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import path from 'path';
 
 export default defineConfig({
 	plugins: [
@@ -14,7 +15,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'node:net': '/etc/mock-node-isip.js'
+			'node:net': path.resolve(__dirname, './etc/mock-node-isip.js')
 		}
 	},
 	optimizeDeps: { include: ['ccxt'] }

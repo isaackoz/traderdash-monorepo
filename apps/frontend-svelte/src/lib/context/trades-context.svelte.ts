@@ -13,9 +13,9 @@ export class TradesState {
 	wsConnectionsLoaded = $derived(publicTradesWsState.isLoaded);
 	prices = $state<SvelteMap<string, Ticker>>(new SvelteMap());
 
-	constructor(props: InitTradesState) {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(_props: InitTradesState) {
 		//
-		console.log(props);
 	}
 
 	watchTickers(exchange: Exchanges, symbols: string[]) {

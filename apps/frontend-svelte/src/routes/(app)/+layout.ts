@@ -42,33 +42,38 @@ export const load: LayoutLoad = async ({ parent, url }) => {
 	// Initialize all connections into a global state
 	const data = queryClient.getQueryData<TAPIUserExchangeGet[]>(['connections']);
 
-	data?.forEach(async (connection) => {
-		// Initialize connections here
-		if (connection.exchangeId === 'traderdash') {
-			return;
-		}
+	if (data) {
+		await Promise.all(
+			data.map(async (connection) => {
+				console.log('In connection,', connection);
+				// Initialize connections here
+				if (connection.exchangeId === 'traderdash') {
+					return;
+				}
 
-		// Create a CCXT class for each connection
-		const exchangeConnection = new ccxt[connection.exchangeId]({
-			proxy: getProxyUrl(connection),
-			apiKey: connection.apiKey,
-			secret: connection.secret?.replace(/\\n/g, '\n').trim(),
-			uid: connection.uid,
-			password: connection.password,
-			options: getExchangeOptions(connection)
-		});
-		try {
-			console.log(await exchangeConnection.loadTimeDifference());
-		} catch (e) {
-			console.log('error', e);
-		}
+				// Create a CCXT class for each connection
+				const exchangeConnection = new ccxt[connection.exchangeId]({
+					proxy: getProxyUrl(connection),
+					apiKey: connection.apiKey,
+					secret: connection.secret?.replace(/\\n/g, '\n').trim(),
+					uid: connection.uid,
+					password: connection.password,
+					options: getExchangeOptions(connection)
+				});
+				try {
+					await exchangeConnection.loadTimeDifference();
+				} catch (e) {
+					console.log('error', e);
+				}
 
-		connectionsState.connections.set(connection.id, {
-			data: connection,
-			ccxtExchanges: exchangeConnection
-		});
-	});
-	console.log('Loading done');
+				connectionsState.connections.set(connection.id, {
+					data: connection,
+					ccxtExchanges: exchangeConnection
+				});
+			})
+		);
+	}
+
 	connectionsState.isLoaded = true;
 
 	return { user, queryClient };

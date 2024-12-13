@@ -16,7 +16,6 @@ export const load: LayoutLoad = async ({ fetch }) => {
 		isAuth = await doesSessionExist();
 		try {
 			user = await getUserData({ fetch });
-			console.log(user);
 		} catch {
 			user = null;
 		}
