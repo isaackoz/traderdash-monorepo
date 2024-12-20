@@ -1,4 +1,4 @@
-import { renderComponent } from '$lib/components/ui/data-table';
+import { renderComponent, renderSnippet } from '$lib/components/ui/data-table';
 import type { TradesTableRow } from '$lib/types/trades';
 import { getExchangeName } from '$lib/utils/exchange';
 import type { ColumnDef } from '@tanstack/table-core';
@@ -7,6 +7,7 @@ import PnlCell from './_components/pnl-cell.svelte';
 import TradeAction from './_components/trade-action.svelte';
 import DataTableReusableColHeader from '$lib/components/ui/data-table/data-table-reusable-col-header.svelte';
 import DirCell from './_components/dir-cell.svelte';
+import { createRawSnippet } from 'svelte';
 
 export const tradesColumns: ColumnDef<TradesTableRow>[] = [
 	{
@@ -16,6 +17,15 @@ export const tradesColumns: ColumnDef<TradesTableRow>[] = [
 				column,
 				title: 'Market Symbol'
 			});
+		},
+		cell: ({ row }) => {
+			const cellSnippet = createRawSnippet<[string]>((marketSymbol) => {
+				const market = marketSymbol();
+				return {
+					render: () => `<div class="font-bold">${market}</div>`
+				};
+			});
+			return renderSnippet(cellSnippet, row.getValue('marketSymbol'));
 		}
 	},
 	{
@@ -94,7 +104,8 @@ export const tradesColumns: ColumnDef<TradesTableRow>[] = [
 		id: 'actions',
 		cell: ({ row }) => {
 			return renderComponent(TradeAction, { id: row.original.id });
-		}
+		},
+		enableHiding: false
 	}
 ];
 

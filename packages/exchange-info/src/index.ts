@@ -19,7 +19,8 @@ export type { ExchangeConfigs, ExchangeConfig, Exchanges };
 export const exchanges = ["traderdash", "coinbase", "bybit", "kraken"] as const;
 export const ccxtExchanges = ["coinbase", "bybit", "kraken"] as const;
 export const proxyLocations = {
-  USA: "https://usa.proxy.traderdash.app/",
+  USA: "http://localhost.test:8080/",
+  // USA: "https://usa.proxy.traderdash.app/",
   NETHERLANDS: "https://europe.proxy.traderdash.app/",
 };
 
@@ -47,7 +48,7 @@ export const exchangeConfigs: ExchangeConfigs = {
   },
   bybit: {
     displayName: "Bybit",
-    imageId: "d48a58c0-5807-4daa-ce95-544e2144f500",
+    imageId: "de77f785-8c32-4a14-5aa3-3bca70d66e00",
     description: "Bybit is a cryptocurrency exchange.",
     authentication: {
       enabled: true,
@@ -90,7 +91,7 @@ export const exchangeConfigs: ExchangeConfigs = {
   },
   kraken: {
     displayName: "Kraken",
-    imageId: "d48a58c0-5807-4daa-ce95-544e2144f500",
+    imageId: "455a16c2-bc7b-4684-4a21-e1e0fb249900",
     description: "Kraken is a cryptocurrency exchange.",
     authentication: {
       enabled: true,

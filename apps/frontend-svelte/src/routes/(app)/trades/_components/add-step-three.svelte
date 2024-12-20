@@ -69,6 +69,7 @@
 			const trades = await ccxt.fetchMyTrades($formData.marketSymbol, undefined, 500, {
 				paginate: true
 			});
+			console.log(trades);
 			const aggregatedTrades = getAggregatedTrades(trades);
 			myTrades = aggregatedTrades;
 		} catch (e) {
@@ -130,7 +131,7 @@
 					{/if}
 					{#each myTrades as trade}
 						<TableRow
-							class="group whitespace-nowrap rounded-md text-xs transition-colors ease-out hover:cursor-pointer hover:bg-muted [&>td]:h-12"
+							class="hover:bg-muted group whitespace-nowrap rounded-md text-xs transition-colors ease-out hover:cursor-pointer [&>td]:h-12"
 							onclick={(e) => {
 								e.preventDefault();
 								detailItem = trade;
@@ -140,7 +141,7 @@
 							<TableCell class="h-fit text-center">
 								{trade?.symbol}
 							</TableCell>
-							<TableCell class="whitespace-nowrap text-muted-foreground">
+							<TableCell class="text-muted-foreground whitespace-nowrap">
 								{new Date(trade?.timestamp ?? '').toLocaleDateString()}
 							</TableCell>
 							<TableCell

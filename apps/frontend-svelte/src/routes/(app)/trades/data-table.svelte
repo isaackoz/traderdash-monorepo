@@ -22,15 +22,12 @@
 	import { Settings2Icon } from 'lucide-svelte';
 	import DataTableRPagination from '$lib/components/ui/data-table/data-table-r-pagination.svelte';
 	import DataTableRFacFilter from '$lib/components/ui/data-table/data-table-r-fac-filter.svelte';
+	import { tableStateStore } from '$stores/table-state.svelte';
 
 	let { data, isLoading = false }: { data: TradesTableRow[]; isLoading: boolean } = $props();
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
-	let sorting = $state<SortingState>([]);
-	let columnFilters = $state<ColumnFiltersState>([]);
-	let columnVisibility = $state<VisibilityState>({
-		exchangeId: false,
-		type: false
+	let { sorting, pagination, columnVisibility, columnFilters } = tableStateStore({
+		id: 'trades'
 	});
 
 	const table = createSvelteTable({

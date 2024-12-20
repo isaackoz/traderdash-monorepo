@@ -16,7 +16,7 @@ import { validate } from '@core/common/validation/env.validation';
         // Learn more about this on https://supertokens.com/docs/passwordless/appinfo
         appName: 'TraderDash',
         apiDomain: 'http://localhost.test:3000',
-        websiteDomain: 'http://localhost.test:5173',
+        websiteDomain: 'http://localhost.test:4173',
         apiBasePath: '/auth',
         websiteBasePath: '/login',
       },

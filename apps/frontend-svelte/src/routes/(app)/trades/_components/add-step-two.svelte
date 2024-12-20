@@ -76,9 +76,10 @@
 
 			// Get all spot markets
 			await ccxt.loadMarkets();
-			spotMarkets = Object.values(ccxt.markets as Market[]).filter(
-				(market) => market?.type === 'spot'
-			);
+			spotMarkets = Object.values(ccxt.markets as Market[]);
+			// .filter(
+			//	(market) => market?.type === 'spot'
+			// );
 		} catch (e) {
 			if (e instanceof Error) {
 				error = e.message;
@@ -127,13 +128,13 @@
 					{:else}
 						{#each filteredSpotMarkets as market}
 							<tr
-								class="border transition-colors ease-out hover:cursor-pointer hover:bg-muted"
+								class="hover:bg-muted border transition-colors ease-out hover:cursor-pointer"
 								onclick={() => handleSelectMarket(market?.symbol)}
 							>
 								<td class=" p-1">
 									{market?.symbol}
 								</td>
-								<td class="p-1 text-muted-foreground">
+								<td class="text-muted-foreground p-1">
 									{market?.type}
 								</td>
 							</tr>
@@ -142,7 +143,7 @@
 				</tbody>
 			</table>
 
-			<p class="flex-grow text-muted-foreground">
+			<p class="text-muted-foreground flex-grow">
 				Showing {filteredSpotMarkets.length} of {spotMarkets.length} available markets
 			</p>
 			<Button type="button" class="w-full" variant="ghost" onclick={handleSelectManual}

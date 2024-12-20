@@ -88,7 +88,6 @@
 					// default to traderdash proxies
 					proxyUrl = proxyLocations[exchangeInfo.settings.proxyLocation];
 				}
-				console.log('Proxy url is', proxyUrl);
 
 				const exchangeClass = ccxt[exchangeId];
 				const exchange = new exchangeClass({
@@ -98,11 +97,15 @@
 					password: $formData.password,
 					proxy: proxyUrl,
 					verbose: true,
-					origin: 'localhost.test',
 					options: {
 						maxRetriesOnFailure: 1
 					}
 				});
+				try {
+					console.log(await exchange.loadTimeDifference());
+				} catch (e) {
+					console.log('error', e);
+				}
 
 				// Check if we have required fields
 				const res = exchange.checkRequiredCredentials(false);
@@ -113,7 +116,6 @@
 				// Some exchanges require signin. Do so here
 				try {
 					if (exchange.has['signIn']) {
-						console.log('Attempting to sign in...');
 						await exchange.signIn();
 					}
 				} catch {}
@@ -121,7 +123,6 @@
 				// Check
 				try {
 					const r = await exchange.fetchBalance();
-					console.log(r);
 				} catch (e) {
 					console.log(e);
 					throw new Error('Invalid keys');
